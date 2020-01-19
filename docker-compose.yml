@@ -1,0 +1,64 @@
+version: "3"
+
+volumes:
+  travel-app-postgres:
+  travel-app-redis:
+  travel-app-gem-bundle:
+
+services:
+  app:
+    container_name: travel-app
+    image: travel-app-ruby-env
+    volumes:
+      - .:/app
+      - travel-app-gem-bundle:/usr/local/bundle
+    working_dir: /app
+    environment:
+      - DATABASE_URL=postgres://postgres@db:5432/postgres?sslmode=disable
+      - REDIS_ADDRESS=redis:6379
+      - ENVIRONMENT=development
+    command: /bin/bash -c "bundle install
+      && yarn install
+      && rake db:migrate
+      && rails s -p 5000 -b 0.0.0.0"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis
+      - webpack
+    links:
+      - db
+      - redis
+      - webpack
+
+  webpack:
+    container_name: travel-app-webpack
+    image: travel-app-ruby-env
+    volumes:
+      - .:/app
+      - travel-app-gem-bundle:/usr/local/bundle
+    working_dir: /app
+    environment:
+      - ENVIRONMENT=development
+    command: /bin/bash -c "yarn install
+      && ./bin/webpack-dev-server"
+    ports:
+      - "5001:3035"
+
+  db:
+    container_name: travel-app-db
+    image: postgres:10.6
+    volumes:
+      - travel-app-postgres:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"
+
+  redis:
+    image: redis:alpine
+    container_name: travel-app-redis
+    command: [ redis-server, --appendonly, "yes" ]
+    volumes:
+      - travel-app-redis:/data
+    ports:
+      - "6301:6380"
