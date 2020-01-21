@@ -31,6 +31,10 @@ gem 'jbuilder', '~> 2.5'
 gem 'devise'
 gem 'sidekiq'
 
+gem 'jwt'
+
+gem 'rack-cors'
+
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
