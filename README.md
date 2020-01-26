@@ -1,24 +1,20 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+*Directions*
 
-Things you may want to cover:
+You'll need docker installed with the `docker-compose` command
+as well as ruby and the bundler gem and node with yarn.
+ 
+In one tab run:
 
-* Ruby version
+`docker-compose up db`
 
-* System dependencies
+In another tab run:
 
-* Configuration
+`yarn install && ./bin/webpack-dev-serving`
 
-* Database creation
+In a final tab run: 
 
-* Database initialization
+`bundle install && bundle exec rake db:migrate && bundle exec rails s -p 5000`
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Finally visit http://localhost:5000
