@@ -12,8 +12,9 @@ import { inject, observer } from "mobx-react";
 import { computed } from "mobx";
 import moment from "moment";
 import { Redirect } from "react-router-dom";
+import { getDaysUntilText } from "./utils/MomentHelpers";
 
-const maxCommentLength = 40;
+const maxCommentLength = 60;
 
 const styles = theme => ({
   root: {
@@ -24,14 +25,17 @@ const styles = theme => ({
   },
   table: {
     minWidth: 600
+  },
+  daysUntil: {
+    color: "gray"
   }
 });
-// const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles);
 
 const convertDate = date => moment(date).format("M-D-YY");
 
-function TripRow({ trip, onClick }) {
-  // const classes = useStyles();
+function TripRow({ trip, onClick, daysUntilText }) {
+  const classes = useStyles();
 
   let { comment } = trip;
   if (comment && comment.length > maxCommentLength) {
@@ -41,8 +45,12 @@ function TripRow({ trip, onClick }) {
 
   return (
     <TableRow hover={true} onClick={onClick}>
-      <TableCell>{trip.id}</TableCell>
-      <TableCell>{trip.destination}</TableCell>
+      <TableCell>
+        {trip.destination}
+        {daysUntilText && (
+          <span className={classes.daysUntil}> ({daysUntilText})</span>
+        )}
+      </TableCell>
       <TableCell>{convertDate(trip.start_date)}</TableCell>
       <TableCell>{convertDate(trip.end_date)}</TableCell>
       <TableCell>{comment}</TableCell>
@@ -75,14 +83,15 @@ class TripsIndex extends React.Component {
       return <Redirect to={`/trips/${trip.id}`} />;
     }
 
+    const now = moment();
     const { classes } = this.props;
+
     return (
       <div className={classes.root}>
         <TableContainer component={Paper}>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Id</TableCell>
                 <TableCell>Destination</TableCell>
                 <TableCell>Start date</TableCell>
                 <TableCell>End date</TableCell>
@@ -94,6 +103,7 @@ class TripsIndex extends React.Component {
                 <TripRow
                   key={trip.id}
                   trip={trip}
+                  daysUntilText={getDaysUntilText(moment(trip.start_date), now)}
                   onClick={() => this.props.tripStore.setTrip(trip)}
                 />
               ))}

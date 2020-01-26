@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { Link, Redirect } from "react-router-dom";
 import moment from "moment";
 import AlertDialog from "./shared/AlertDialog";
+import { getDaysUntilText } from "./utils/MomentHelpers";
 
 const useStyles = makeStyles({
   card: {
@@ -29,28 +30,43 @@ const useStyles = makeStyles({
   link: {
     color: "#000",
     textDecoration: "none"
+  },
+  daysUntil: {
+    marginLeft: 10
   }
 });
 
-const convertDate = date => moment(date).format("MMM D YYYY");
+const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
 function TripCard(props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
   const { id, destination, start_date, end_date, comment } = props.trip;
   const startDate = convertDate(start_date);
   const endDate = convertDate(end_date);
+  const now = moment();
+  const startMoment = moment(start_date);
+  const daysUntilText = getDaysUntilText(startMoment, now);
 
   return (
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {destination}
+          {daysUntilText && (
+            <Typography
+              color="textSecondary"
+              variant="h5"
+              className={classes.daysUntil}
+              component="span"
+            >
+              ({daysUntilText})
+            </Typography>
+          )}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           {startDate} - {endDate}
         </Typography>
-        <Typography variant="body2" component="p">
+        <Typography variant="body1" component="p">
           {comment}
         </Typography>
       </CardContent>
@@ -67,23 +83,6 @@ function TripCard(props) {
     </Card>
   );
 }
-
-const styles = {
-  card: {
-    minWidth: 275
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  title: {
-    fontSize: 14
-  },
-  pos: {
-    marginBottom: 12
-  }
-};
 
 @inject("tripStore")
 @observer

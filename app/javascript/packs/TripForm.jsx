@@ -89,7 +89,6 @@ class TripForm extends React.Component {
 
     const { classes } = this.props;
     const trip = this.props.tripStore.getTrip();
-    console.log(this.errorMessages);
     return (
       <div>
         <Paper style={{ padding: 10 }}>
