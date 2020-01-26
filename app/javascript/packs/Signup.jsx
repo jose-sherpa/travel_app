@@ -6,7 +6,7 @@ import { inject, observer } from "mobx-react";
 import { Link, Redirect } from "react-router-dom";
 import ErrorMessages from "./shared/ErrorMessages";
 import Notices from "./shared/Notices";
-import {computed} from "mobx";
+import { computed } from "mobx";
 import LinkButton from "./shared/LinkButton";
 
 @inject("rootStore")
@@ -76,7 +76,7 @@ class Signup extends React.Component {
 
     return (
       <div style={{ padding: "10%" }}>
-        <Notices notices={this.notices()}/>
+        <Notices notices={this.notices()} />
         <ErrorMessages errors={this.state.errors} />
         <h2>Sign up</h2>
         <form>

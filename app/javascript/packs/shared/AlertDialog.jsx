@@ -6,7 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import React from "react";
 
-export default function AlertDialog({open, title, text, children, onClose}) {
+export default function AlertDialog({ open, title, text, children, onClose }) {
   return (
     <div>
       <Dialog
@@ -17,11 +17,11 @@ export default function AlertDialog({open, title, text, children, onClose}) {
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{text}</DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            {text}
+          </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          {children}
-        </DialogActions>
+        <DialogActions>{children}</DialogActions>
       </Dialog>
     </div>
   );

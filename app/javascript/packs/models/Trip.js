@@ -7,8 +7,8 @@ class Trip {
 
   errors() {
     let errors = {};
-    return errors
+    return errors;
   }
 }
 
-export default Trip
+export default Trip;

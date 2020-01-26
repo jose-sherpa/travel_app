@@ -14,10 +14,10 @@ export class AuthStore {
   set apiKey(value) {
     this._apiKey = value;
     fetch("/users/sessions/set_cookie", {
-        headers: {
-          Authorization: `Token ${value}`
-        }
-      })
+      headers: {
+        Authorization: `Token ${value}`
+      }
+    })
       .then(response => console.log(response))
       .catch(error => console.log(error));
   }

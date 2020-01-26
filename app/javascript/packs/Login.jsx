@@ -5,7 +5,7 @@ import { FormGroup } from "@material-ui/core";
 import { inject, observer } from "mobx-react";
 import { Redirect, Link } from "react-router-dom";
 import Notices from "./shared/Notices";
-import {computed} from "mobx";
+import { computed } from "mobx";
 import LinkButton from "./shared/LinkButton";
 import ErrorMessages from "./shared/ErrorMessages";
 
@@ -16,8 +16,8 @@ class Login extends React.Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      errors: null,
-    }
+      errors: null
+    };
   }
 
   handleLogin(e) {
@@ -25,7 +25,7 @@ class Login extends React.Component {
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     this.props.rootStore.login(email, password, errors => {
-      this.setState({ errors })
+      this.setState({ errors });
     });
   }
 

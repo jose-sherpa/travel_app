@@ -1,9 +1,9 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {makeStyles, withStyles} from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
-import {Switch, Route, Link} from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 import TripsIndex from "./TripsIndex";
 import TripForm from "./TripForm";
 import { Provider } from "mobx-react";
@@ -13,65 +13,66 @@ import { inject, observer } from "mobx-react";
 
 const styles = theme => ({
   root: {
-    padding: '2rem',
+    padding: "2rem"
   },
   title: {
     flexGrow: 1
   },
   addButton: {
-    color: 'green',
+    color: "green"
   },
   link: {
-    textDecoration: 'none',
-    color: '#000',
+    textDecoration: "none",
+    color: "#000"
   },
   header: {
-    marginBottom: 20,
-  },
+    marginBottom: 20
+  }
 });
 
 const useStyles = makeStyles(styles);
 
-function AddButton(){
+function AddButton() {
   const classes = useStyles();
 
   return (
-    <Link to='/trips/new' className={classes.link}>
+    <Link to="/trips/new" className={classes.link}>
       <Button>
-        <Icon
-          fontSize="large"
-          className={classes.addButton}>
+        <Icon fontSize="large" className={classes.addButton}>
           add_circle
         </Icon>
       </Button>
     </Link>
-  )
-};
+  );
+}
 
-@inject('rootStore')
+@inject("rootStore")
 @observer
 class Trips extends React.Component {
   constructor(props) {
     super(props);
-    this.tripsStore = new TripStore(this.props.rootStore.authStore)
+    this.tripsStore = new TripStore(this.props.rootStore.authStore);
   }
 
   header() {
-    const { classes, location: { pathname } } = this.props;
+    const {
+      classes,
+      location: { pathname }
+    } = this.props;
 
     if (!pathname.match(/\/trips(\/)?$/)) {
       return (
         <Link to="/trips" className={classes.link}>
           <Button>Back to trips</Button>
         </Link>
-      )
+      );
     }
 
     return (
       <Typography variant="h4" className={classes.title}>
-        Trips <AddButton/>
+        Trips <AddButton />
       </Typography>
-    )
+    );
   }
 
   render() {
@@ -81,19 +82,17 @@ class Trips extends React.Component {
     return (
       <Provider tripStore={this.tripsStore}>
         <div className={classes.root}>
-          <div className={classes.header}>
-            {this.header()}
-          </div>
+          <div className={classes.header}>{this.header()}</div>
           <Switch>
-            <Route path={`${path}/new`} component={TripForm}/>
-            <Route path={`${path}/:id/edit`} component={TripForm}/>
-            <Route path={`${path}/:id`} component={Trip}/>
-            <Route path={`${path}`} component={TripsIndex}/>
+            <Route path={`${path}/new`} component={TripForm} />
+            <Route path={`${path}/:id/edit`} component={TripForm} />
+            <Route path={`${path}/:id`} component={Trip} />
+            <Route path={`${path}`} component={TripsIndex} />
           </Switch>
         </div>
       </Provider>
-    )
+    );
   }
 }
 
-export default withStyles(styles)(Trips)
+export default withStyles(styles)(Trips);

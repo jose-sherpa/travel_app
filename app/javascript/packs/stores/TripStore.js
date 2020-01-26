@@ -1,4 +1,4 @@
-import {action, computed, observable} from "mobx";
+import { action, computed, observable } from "mobx";
 import NetworkStore from "./NetworkStore";
 
 class TripStore extends NetworkStore {
@@ -6,63 +6,64 @@ class TripStore extends NetworkStore {
   @observable trip;
 
   constructor(authStore) {
-    super(authStore)
+    super(authStore);
   }
 
   getTrips() {
-    return this.trips
+    return this.trips;
   }
 
   @action.bound
   setTrips(trips) {
-    this.trips = trips || []
+    this.trips = trips || [];
   }
 
-  findTrip(id){
-    return this.getTrips().find(trip => trip.id == id)
+  findTrip(id) {
+    return this.getTrips().find(trip => trip.id == id);
   }
 
   getTrip() {
-    return this.trip
+    return this.trip;
   }
 
   @action.bound
   setTrip(trip) {
-    this.trip = trip
+    this.trip = trip;
   }
 
   @action.bound
   fetchTrips(callback) {
     this.conn
-      .get('/api/trips')
+      .get("/api/trips")
       .then(response => {
-        console.log(response)
-        this.setTrips(response.data.trips)
+        console.log(response);
+        this.setTrips(response.data.trips);
       })
       .catch(error => console.log(error))
       .finally(() => {
         if (callback) {
-          callback()
+          callback();
         }
-      })
+      });
   }
 
   @action.bound
   fetchTrip(id, callback) {
-    this.conn.get(`/api/trips/${id}`)
+    this.conn
+      .get(`/api/trips/${id}`)
       .then(response => {
-        console.log(response)
-        this.setTrip(response.data.trip)
+        console.log(response);
+        this.setTrip(response.data.trip);
       })
       .catch(error => {
-        console.log(error)
-        this.setTrip(null)
+        console.log(error);
+        this.setTrip(null);
       })
       .finally(() => {
-      if (callback) {
-        callback()
-      }
-    })
+        if (callback) {
+          callback();
+        }
+      });
   }
 
   @action.bound
@@ -70,31 +71,33 @@ class TripStore extends NetworkStore {
     let trip = this.getTrip();
     const config = {
       validateStatus: status => status >= 200 && status < 500,
-      data: { trip },
+      data: { trip }
     };
 
-    let req = trip.id ? this.conn.put(`/api/trips/${trip.id}`, {}, config) : this.conn.post('/api/trips', {}, config);
+    let req = trip.id
+      ? this.conn.put(`/api/trips/${trip.id}`, {}, config)
+      : this.conn.post("/api/trips", {}, config);
     req
       .then(response => {
-        console.log(response)
+        console.log(response);
         if (response.status === 404) {
-          callback({redirectTo: '/trips'});
+          callback({ redirectTo: "/trips" });
         } else if (response.data.trip) {
-          callback({redirectTo: `/trips/${response.data.trip.id}`})
+          callback({ redirectTo: `/trips/${response.data.trip.id}` });
         } else if (response.data.errors) {
-          callback(response.data)
+          callback(response.data);
         }
       })
       .catch(error => {
         console.log(error);
-        callback({ error })
-      })
+        callback({ error });
+      });
   }
 
   @action.bound
   deleteTrip(callback) {
-    this.conn.delete(`/api/trips/${this.getTrip().id}`).finally(callback)
+    this.conn.delete(`/api/trips/${this.getTrip().id}`).finally(callback);
   }
 }
 
-export default TripStore
+export default TripStore;

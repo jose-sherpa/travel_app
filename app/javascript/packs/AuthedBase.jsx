@@ -13,10 +13,14 @@ class AuthedBase extends React.Component {
   }
 
   render() {
-    console.log(`rendering authed base for path ${this.props.location.pathname}`)
-    if (this.props.location?.pathname === '/') {
-      console.log(`redirecting from authed base for path ${this.props.location.pathname}`)
-      return <Redirect to='/trips'/>
+    console.log(
+      `rendering authed base for path ${this.props.location.pathname}`
+    );
+    if (this.props.location?.pathname === "/") {
+      console.log(
+        `redirecting from authed base for path ${this.props.location.pathname}`
+      );
+      return <Redirect to="/trips" />;
     }
 
     return (

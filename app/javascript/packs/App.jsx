@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Home from "./Home";
 import RootStore from "./stores/RootStore";
 import { Provider } from "mobx-react";
-import {CircularProgress} from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 
 const rootStore = new RootStore();
 
@@ -11,20 +11,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-    }
+      loading: true
+    };
   }
 
   componentDidMount() {
     if (!rootStore.apiKey) {
-      rootStore
-        .fetchToken(() => this.setState({loading: false}));
+      rootStore.fetchToken(() => this.setState({ loading: false }));
     }
   }
 
   render() {
     if (this.state.loading) {
-      return (<CircularProgress />)
+      return <CircularProgress />;
     }
 
     return (

@@ -49,22 +49,26 @@ export default class RootStore extends NetworkStore {
   @action.bound
   login(email, password, errorsCallback) {
     this.conn
-      .post("/users/sign_in", {
-        user: {
-          email: email,
-          password: password
+      .post(
+        "/users/sign_in",
+        {
+          user: {
+            email: email,
+            password: password
+          }
+        },
+        {
+          validateStatus: status => status >= 200 && status < 500
         }
-      }, {
-          validateStatus: status => status >= 200 && status < 500,
-      })
+      )
       .then(
         action("loginSuccess", response => {
           if (response.status >= 300) {
             if (errorsCallback) errorsCallback(response.data.errors);
             this.apiKey = null;
-            return
+            return;
           }
-          
+
           if (!response.data || !response.data.token) {
             throw new Error("no token present");
           }

@@ -40,7 +40,7 @@ class NavBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <NavMenu/>
+            <NavMenu />
             <Typography variant="h6" className={classes.title}>
               Travel App
             </Typography>

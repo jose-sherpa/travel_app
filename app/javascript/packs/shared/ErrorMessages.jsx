@@ -10,7 +10,7 @@ export default function ErrorMessages({ errors }) {
   return (
     <div>
       {Object.entries(errors).map(([key, value], idx) => (
-        <Message key={idx} text={`${key} ${value.join(', ')}`} />
+        <Message key={idx} text={`${key} ${value.join(", ")}`} />
       ))}
     </div>
   );

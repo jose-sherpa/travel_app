@@ -5,7 +5,7 @@ export default class NetworkStore {
   authStore;
 
   constructor(authStore) {
-    this.authStore = authStore
+    this.authStore = authStore;
   }
 
   get apiKey() {
