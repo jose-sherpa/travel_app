@@ -3,7 +3,7 @@ module Api
     before_action :set_trip, only: %i[show update destroy]
 
     def index
-      @trips = Trip.where(user: current_user)
+      @trips = Trip.where(user: current_user).order(start_date: :asc)
       render status: 200, json: { trips: @trips }
     end
 
