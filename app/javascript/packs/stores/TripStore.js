@@ -1,6 +1,8 @@
 import { action, computed, observable } from "mobx";
 import NetworkStore from "./NetworkStore";
 
+const validateStatus = status => status >= 200 && status < 500;
+
 class TripStore extends NetworkStore {
   @observable trips = [];
   @observable trip;
@@ -34,12 +36,24 @@ class TripStore extends NetworkStore {
   @action.bound
   fetchTrips(callback) {
     this.conn
-      .get("/api/trips")
+      .get("/api/trips", { validateStatus })
       .then(response => {
         console.log(response);
+        if (response.status === 401) {
+          this.authStore.apiKey = null;
+          return;
+        }
+
+        if (response.status >= 300) {
+          throw new Error(`unacceptable status code ${response.status}`);
+        }
+
         this.setTrips(response.data.trips);
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error);
+        this.setTrips([]);
+      })
       .finally(() => {
         if (callback) {
           callback();
@@ -50,9 +64,18 @@ class TripStore extends NetworkStore {
   @action.bound
   fetchTrip(id, callback) {
     this.conn
-      .get(`/api/trips/${id}`)
+      .get(`/api/trips/${id}`, { validateStatus })
       .then(response => {
         console.log(response);
+        if (response.status === 401) {
+          this.authStore.apiKey = null;
+          return;
+        }
+
+        if (response.status >= 300) {
+          throw new Error(`unacceptable status code ${response.status}`);
+        }
+
         this.setTrip(response.data.trip);
       })
       .catch(error => {
@@ -70,7 +93,7 @@ class TripStore extends NetworkStore {
   postTrip(callback) {
     let trip = this.getTrip();
     const config = {
-      validateStatus: status => status >= 200 && status < 500,
+      validateStatus,
       data: { trip }
     };
 
@@ -80,6 +103,11 @@ class TripStore extends NetworkStore {
     req
       .then(response => {
         console.log(response);
+        if (response.status === 401) {
+          this.authStore.apiKey = null;
+          return;
+        }
+
         if (response.status === 404) {
           callback({ redirectTo: "/trips" });
         } else if (response.data.trip) {
@@ -96,7 +124,12 @@ class TripStore extends NetworkStore {
 
   @action.bound
   deleteTrip(callback) {
-    this.conn.delete(`/api/trips/${this.getTrip().id}`).finally(callback);
+    this.conn
+      .delete(`/api/trips/${this.getTrip().id}`, { validateStatus })
+      .catch(response => {
+        if (response.status === 401) this.authStore.apiKey = null;
+      })
+      .finally(callback);
   }
 }
 

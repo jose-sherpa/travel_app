@@ -56,8 +56,8 @@ class TripForm extends React.Component {
 
   newTrip() {
     return {
-      start_date: moment().format(),
-      end_date: moment().format()
+      start_date: null,
+      end_date: null
     };
   }
 
