@@ -45,13 +45,13 @@ function TripRow({ trip, onClick, daysUntilText }) {
 
   return (
     <TableRow hover={true} onClick={onClick}>
-      <TableCell>
-        {trip.destination}
+      <TableCell>{trip.destination}</TableCell>
+      <TableCell style={{ textAlign: "right" }}>
         {daysUntilText && (
-          <span className={classes.daysUntil}> ({daysUntilText})</span>
+          <span className={classes.daysUntil}>({daysUntilText}) </span>
         )}
+        {convertDate(trip.start_date)}
       </TableCell>
-      <TableCell>{convertDate(trip.start_date)}</TableCell>
       <TableCell>{convertDate(trip.end_date)}</TableCell>
       <TableCell>{comment}</TableCell>
     </TableRow>
@@ -93,7 +93,7 @@ class TripsIndex extends React.Component {
             <TableHead>
               <TableRow>
                 <TableCell>Destination</TableCell>
-                <TableCell>Start date</TableCell>
+                <TableCell style={{ textAlign: "right" }}>Start date</TableCell>
                 <TableCell>End date</TableCell>
                 <TableCell>Comment</TableCell>
               </TableRow>
