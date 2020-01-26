@@ -13,7 +13,12 @@ const privateRoute = ({ component: Component, rootStore, ...rest }) => {
         return authed ? (
           <Component {...newProps} />
         ) : (
-          <Redirect to="/users/login" />
+          <Redirect
+            to={{
+              pathname: "/users/login",
+              state: newProps.location?.state
+            }}
+          />
         );
       }}
     />

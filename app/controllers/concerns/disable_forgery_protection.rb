@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::Base
+module DisableForgeryProtection
   private
 
   def verify_authenticity_token(*args)

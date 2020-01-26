@@ -5,9 +5,7 @@ export class AuthStore {
   @observable _apiKey = null;
   @observable user = null;
 
-  constructor(rootStore) {
-    this.rootStore = rootStore;
-  }
+  constructor() {}
 
   get apiKey() {
     return this._apiKey;
@@ -15,8 +13,7 @@ export class AuthStore {
 
   set apiKey(value) {
     this._apiKey = value;
-    axios
-      .get("/users/sessions/set_cookie", {
+    fetch("/users/sessions/set_cookie", {
         headers: {
           Authorization: `Token ${value}`
         }

@@ -1,34 +1,15 @@
 import { action, computed } from "mobx";
 import axios from "axios";
 import { AuthStore } from "./AuthStore";
+import NetworkStore from "./NetworkStore";
 
-export default class RootStore {
-  authStore;
-
+export default class RootStore extends NetworkStore {
   constructor() {
-    this.authStore = new AuthStore(this);
-    this.axios = axios.create();
-  }
-
-  get apiKey() {
-    return this.authStore.apiKey;
-  }
-
-  set apiKey(value) {
-    this.authStore.apiKey = value;
-  }
-
-  @computed
-  get conn() {
-    return axios.create({
-      headers: {
-        Authorization: `Token ${this.apiKey}`
-      }
-    });
+    super(new AuthStore());
   }
 
   @action.bound
-  fetchToken() {
+  fetchToken(callback) {
     this.conn
       .get("/users/sessions/get_token")
       .then(
@@ -39,11 +20,21 @@ export default class RootStore {
           this.apiKey = response.data.token;
         })
       )
-      .catch(error => console.log(error));
+      .catch(error => console.log(error))
+      .finally(() => {
+        if (callback) callback();
+      });
   }
 
-  @action.bound
-  signup() {}
+  signup(email, password, passwordConfirmation) {
+    return this.conn.post(
+      "/users",
+      {
+        user: { email, password, password_confirmation: passwordConfirmation }
+      },
+      { validateStatus: status => status >= 200 && status < 500 }
+    );
+  }
 
   @action.bound
   logout() {
@@ -56,26 +47,35 @@ export default class RootStore {
   }
 
   @action.bound
-  login(email, password) {
+  login(email, password, errorsCallback) {
     this.conn
       .post("/users/sign_in", {
         user: {
           email: email,
           password: password
         }
+      }, {
+          validateStatus: status => status >= 200 && status < 500,
       })
       .then(
         action("loginSuccess", response => {
+          if (response.status >= 300) {
+            if (errorsCallback) errorsCallback(response.data.errors);
+            this.apiKey = null;
+            return
+          }
+          
           if (!response.data || !response.data.token) {
             throw new Error("no token present");
           }
+
           this.apiKey = response.data.token;
           this.authStore.currentUser = response.data.user;
         })
       )
       .catch(
         action("loginError", error => {
-          self.props.rootStore.apiKey = null;
+          this.apiKey = null;
           console.log(error);
         })
       );

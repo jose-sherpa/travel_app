@@ -4,6 +4,7 @@ require 'active_support'
 
 class ReactAppController < ApplicationController
   layout 'react_app'
+  #before_action :authenticate_user!
 
   def home
     puts cookies.to_h

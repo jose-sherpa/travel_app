@@ -1,26 +1,29 @@
+# frozen_string_literal: true
+
 class SessionsController < Devise::SessionsController
   include JwtManagement
-  protect_from_forgery with: :null_session
+  include DisableForgeryProtection
   skip_before_action :verify_signed_out_user
 
   def create
     user = User.find_by(email: login_params[:email])
     if user.nil? || !user.valid_password?(login_params[:password])
-      head 401
+      render status: 401, json: { errors: { credentials: ['are invalid'] } }
       return
     end
 
     self.resource = user
 
     session = UserSession.create(user: user)
-    sign_in(resource_name, resource)
-    render status: 200, json: { user: resource, token: create_token({ id: session.id })}
+    render status: 200, json: {
+      user: resource,
+      token: create_token(id: session.id)
+    }
   end
 
   def destroy
     reset_session
     session = UserSession.find_by(id: token_payload&.dig('data', 'id'))
-    #binding.pry
     session&.update(deleted: true)
     head 200
   end
@@ -34,6 +37,7 @@ class SessionsController < Devise::SessionsController
       return
     end
 
+    sign_in(resource_name, session.user)
     warden.env['rack.session']['user_session_id'] = session.id
 
     head 200
@@ -41,13 +45,14 @@ class SessionsController < Devise::SessionsController
 
   def get_token
     rack_session = warden.env['rack.session'] || {}
+    puts warden.env['rack.session'].to_h
     session = UserSession.active.find_by(id: rack_session['user_session_id'])
     if session.nil?
       head 401
       return
     end
 
-    render status: 200, json: { user: session.user, token: create_token(id: session.id)}
+    render status: 200, json: { user: session.user, token: create_token(id: session.id) }
   end
 
   private

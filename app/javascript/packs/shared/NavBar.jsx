@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import { withStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
+import NavMenu from "./NavMenu";
 
 const styles = theme => ({
   root: {
@@ -39,14 +40,7 @@ class NavBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              className={classes.menuButton}
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
+            <NavMenu/>
             <Typography variant="h6" className={classes.title}>
               Travel App
             </Typography>

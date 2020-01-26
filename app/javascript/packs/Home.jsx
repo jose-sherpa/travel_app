@@ -17,11 +17,11 @@ class Home extends React.Component {
     console.log("rendering home");
     return (
       <BrowserRouter>
-          <Switch>
-              <Route path="/users/login" component={Login} />
-              <Route path="/users/signup" component={Signup} />
-              <PrivateRoute path="/" component={AuthedBase} />
-          </Switch>
+        <Switch>
+          <Route path="/users/login" component={Login} />
+          <Route path="/users/signup" component={Signup} />
+          <PrivateRoute path="/" component={AuthedBase} />
+        </Switch>
       </BrowserRouter>
     );
   }
