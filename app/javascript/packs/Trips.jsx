@@ -16,10 +16,12 @@ const styles = theme => ({
     padding: "2rem"
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    textTransform: "none"
   },
   addButton: {
-    color: "green"
+    color: "green",
+    paddingLeft: 5
   },
   link: {
     textDecoration: "none",
@@ -38,6 +40,9 @@ function AddButton() {
   return (
     <Link to="/trips/new" className={classes.link}>
       <Button>
+        <Typography variant="h4" className={classes.title}>
+          New trip
+        </Typography>
         <Icon fontSize="large" className={classes.addButton}>
           add_circle
         </Icon>
@@ -68,11 +73,7 @@ class Trips extends React.Component {
       );
     }
 
-    return (
-      <Typography variant="h4" className={classes.title}>
-        Trips <AddButton />
-      </Typography>
-    );
+    return <AddButton />;
   }
 
   render() {
