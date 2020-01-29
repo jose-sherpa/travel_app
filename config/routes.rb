@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   ]
 
   namespace :api, defaults: { format: :json } do
+    get '/trips/itinerary/:date', controller: :trips, action: :itinerary
     resources :trips, except: %i[new]
   end
 

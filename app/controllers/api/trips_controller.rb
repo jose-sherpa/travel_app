@@ -7,6 +7,19 @@ module Api
       render status: 200, json: { trips: @trips }
     end
 
+    def itinerary
+      start_of_month = DateTime.strptime(params[:date], '%Y-%m').to_date
+      range = (start_of_month...start_of_month.end_of_month + 1.day)
+      @trips = Trip.where(user: current_user)
+                   .where('start_date <= ? AND end_date >= ?', range.first, range.first)
+                   .or(Trip.where(start_date: range, user: current_user))
+                   .order(start_date: :asc)
+      render status: 200, json: { trips: @trips }
+    rescue ArgumentError => e
+      Rails.logger.info e
+      head 422
+    end
+
     def show
       render status: 200, json: { trip: @trip }
     end

@@ -131,6 +131,35 @@ class TripStore extends NetworkStore {
       })
       .finally(callback);
   }
+
+  @action.bound
+  fetchItinerary(startOfMonth, callback) {
+    const nextMonth = startOfMonth.format('YYYY-MM');
+    this.conn
+      .get(`/api/trips/itinerary/${nextMonth}`, { validateStatus })
+      .then(response => {
+        console.log(response);
+        if (response.status === 401) {
+          this.authStore.apiKey = null;
+          return;
+        }
+
+        if (response.status >= 300) {
+          throw new Error(`unacceptable status code ${response.status}`);
+        }
+
+        this.setTrips(response.data.trips);
+      })
+      .catch(error => {
+        console.log(error);
+        this.setTrips([]);
+      })
+      .finally(() => {
+        if (callback) {
+          callback();
+        }
+      });
+  }
 }
 
 export default TripStore;

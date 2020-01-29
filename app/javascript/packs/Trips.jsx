@@ -10,6 +10,7 @@ import { Provider } from "mobx-react";
 import TripStore from "./stores/TripStore";
 import Trip from "./Trip";
 import { inject, observer } from "mobx-react";
+import TripItinerary from "./TripItinerary";
 
 const styles = theme => ({
   root: {
@@ -85,6 +86,7 @@ class Trips extends React.Component {
         <div className={classes.root}>
           <div className={classes.header}>{this.header()}</div>
           <Switch>
+            <Route path={`${path}/itinerary`} component={TripItinerary} />
             <Route path={`${path}/new`} component={TripForm} />
             <Route path={`${path}/:id/edit`} component={TripForm} />
             <Route path={`${path}/:id`} component={Trip} />
