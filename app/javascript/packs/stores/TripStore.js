@@ -134,7 +134,7 @@ class TripStore extends NetworkStore {
 
   @action.bound
   fetchItinerary(startOfMonth, callback) {
-    const nextMonth = startOfMonth.format('YYYY-MM');
+    const nextMonth = startOfMonth.format("YYYY-MM");
     this.conn
       .get(`/api/trips/itinerary/${nextMonth}`, { validateStatus })
       .then(response => {

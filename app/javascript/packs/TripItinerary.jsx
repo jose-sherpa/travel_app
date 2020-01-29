@@ -3,13 +3,13 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
 import { computed } from "mobx";
 import moment from "moment";
-import {getDaysUntilText} from "./utils/MomentHelpers";
+import { getDaysUntilText } from "./utils/MomentHelpers";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import ReactToPrint from 'react-to-print';
-import PrintIcon from '@material-ui/icons/Print';
+import ReactToPrint from "react-to-print";
+import PrintIcon from "@material-ui/icons/Print";
 
 const styles = theme => ({
   root: {
@@ -48,7 +48,7 @@ const useStyles = makeStyles(styles);
 
 const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
-function TripCard({trip}) {
+function TripCard({ trip, style }) {
   const classes = useStyles();
   const { id, destination, start_date, end_date, comment } = trip;
   const startDate = convertDate(start_date);
@@ -58,7 +58,7 @@ function TripCard({trip}) {
   const daysUntilText = getDaysUntilText(startMoment, now);
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} style={style}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {destination}
@@ -91,7 +91,9 @@ class TripItinerary extends React.Component {
     super(props);
     this.props.tripStore.setTrip(null);
     this.state = {
-      startOfMonth: moment().endOf('month').add(1, 'second'),
+      startOfMonth: moment()
+        .endOf("month")
+        .add(1, "second")
     };
   }
 
@@ -107,18 +109,15 @@ class TripItinerary extends React.Component {
   tripContent() {
     if (this.trips.length === 0) {
       return (
-        <Typography variant='h6'>
+        <Typography variant="h6">
           You have no trips planned during this month.
         </Typography>
-      )
+      );
     }
 
     return this.trips.map(trip => (
-      <TripCard
-        key={trip.id}
-        trip={trip}
-      />
-    ))
+      <TripCard style={{ marginTop: "1rem" }} key={trip.id} trip={trip} />
+    ));
   }
 
   render() {
@@ -129,7 +128,11 @@ class TripItinerary extends React.Component {
     return (
       <div className={classes.root}>
         <ReactToPrint
-          trigger={() => <Button><PrintIcon/></Button>}
+          trigger={() => (
+            <Button>
+              <PrintIcon />
+            </Button>
+          )}
           content={() => this.componentRef}
         />
         <div className={classes.container} ref={el => (this.componentRef = el)}>
