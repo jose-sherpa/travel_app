@@ -11,6 +11,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import LinkButton from "./LinkButton";
 import { Link } from "react-router-dom";
+import {inject, observer} from "mobx-react";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function NavMenu() {
+export default inject("rootStore")(observer(function NavMenu({rootStore}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -53,6 +54,9 @@ export default function NavMenu() {
   React.useEffect(() => {
     prevOpen.current = open;
   }, [open]);
+
+  const user = rootStore.authStore.currentUser;
+  const isManager = user && (user.role === "admin" || user.role === "manager");
 
   return (
     <div className={classes.root}>
@@ -105,6 +109,15 @@ export default function NavMenu() {
                     >
                       <MenuItem>Next month's itinerary</MenuItem>
                     </Link>
+                    {isManager &&
+                    <Link
+                      to="/manager/users"
+                      className={classes.link}
+                      onClick={handleClose}
+                    >
+                      <MenuItem>Users</MenuItem>
+                    </Link>
+                    }
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -114,4 +127,4 @@ export default function NavMenu() {
       </div>
     </div>
   );
-}
+}))

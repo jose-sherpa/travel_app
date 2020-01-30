@@ -14,10 +14,12 @@ export default class RootStore extends NetworkStore {
       .get("/users/sessions/get_token")
       .then(
         action("fetchTokenSuccess", response => {
-          if (!response.data || !response.data.token) {
+          const { data } = response;
+          if (!data || !data.token) {
             throw new Error("no token");
           }
-          this.apiKey = response.data.token;
+          this.apiKey = data.token;
+          this.authStore.currentUser = data.user;
         })
       )
       .catch(error => console.log(error))
@@ -66,20 +68,23 @@ export default class RootStore extends NetworkStore {
           if (response.status >= 300) {
             if (errorsCallback) errorsCallback(response.data.errors);
             this.apiKey = null;
+            this.authStore.currentUser = null;
             return;
           }
 
-          if (!response.data || !response.data.token) {
+          const { data } = response;
+          if (!data || !data.token) {
             throw new Error("no token present");
           }
 
-          this.apiKey = response.data.token;
-          this.authStore.currentUser = response.data.user;
+          this.apiKey = data.token;
+          this.authStore.currentUser = data.user;
         })
       )
       .catch(
         action("loginError", error => {
           this.apiKey = null;
+          this.authStore.currentUser = null;
           console.log(error);
         })
       );

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import NavBar from "./shared/NavBar";
 import Signup from "./Signup";
 import Trips from "./Trips";
+import Users from "./manager/Users";
 
 @inject("rootStore")
 @observer
@@ -28,6 +29,7 @@ class AuthedBase extends React.Component {
         <NavBar />
         <Switch>
           <Route path="/trips" component={Trips} />
+          <Route path="/manager/users" component={Users}/>
         </Switch>
       </div>
     );

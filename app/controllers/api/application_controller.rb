@@ -5,6 +5,7 @@ module Api
     before_action :authenticate!
 
     class UnauthorizedRequest < StandardError; end
+    class Forbidden < StandardError; end
 
     rescue_from UnauthorizedRequest do
       head 401
@@ -12,6 +13,10 @@ module Api
 
     rescue_from ActiveRecord::RecordNotFound do
       head 404
+    end
+
+    rescue_from Forbidden do
+      head 403
     end
 
     private
