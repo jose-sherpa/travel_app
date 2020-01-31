@@ -121,6 +121,7 @@ class UserForm extends React.Component {
                 <InputLabel htmlFor="role">Role</InputLabel>
                 <Select
                   id="role"
+                  error={Boolean(this.errorMessages.role)}
                   value={user.role || ""}
                   onChange={e => (user.role = blankToNull(e.target.value))}
                 >
@@ -128,6 +129,9 @@ class UserForm extends React.Component {
                   <MenuItem value={"manager"}>Manager</MenuItem>
                   <MenuItem value={"admin"}>Admin</MenuItem>
                 </Select>
+                <FormHelperText>
+                  {this.errorMessages.role || ""}
+                </FormHelperText>
               </FormControl>
               <FormControl
                 className={classes.formControl}

@@ -46,9 +46,13 @@ module Api
         permitted = params
                     .require(:user)
                     .permit(:email, :password, :password_confirmation, :role)
+
         if !permitted[:password].nil? && permitted[:password_confirmation].nil?
           permitted[:password_confirmation] = ''
         end
+
+        permitted[:current_user] = current_user
+
         permitted
       end
 
