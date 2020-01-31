@@ -25,6 +25,8 @@ module Api
       end
 
       def update
+        raise Forbidden if @user.admin? && !current_user.admin?
+
         if @user.update(user_params)
           render status: 200, json: { user: @user }
         else
@@ -33,6 +35,8 @@ module Api
       end
 
       def destroy
+        raise Forbidden if @user.admin? && !current_user.admin?
+
         if @user.destroy
           head 200
         else

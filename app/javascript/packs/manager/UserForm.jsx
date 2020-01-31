@@ -95,6 +95,11 @@ class UserForm extends React.Component {
 
     const { classes } = this.props;
     const user = this.props.userStore.user;
+    const isAdmin = this.props.userStore.authStore.user.role === "admin";
+
+    if (!isAdmin && user.role === "admin")
+      return <Redirect to="/manager/users" />;
+
     return (
       <div>
         <Paper style={{ padding: 10 }}>
@@ -123,15 +128,14 @@ class UserForm extends React.Component {
                   id="role"
                   error={Boolean(this.errorMessages.role)}
                   value={user.role || ""}
+                  disabled={user.role === "admin" && !isAdmin}
                   onChange={e => (user.role = blankToNull(e.target.value))}
                 >
                   <MenuItem value={""}>None</MenuItem>
                   <MenuItem value={"manager"}>Manager</MenuItem>
-                  <MenuItem value={"admin"}>Admin</MenuItem>
+                  {isAdmin && <MenuItem value={"admin"}>Admin</MenuItem>}
                 </Select>
-                <FormHelperText>
-                  {this.errorMessages.role || ""}
-                </FormHelperText>
+                <FormHelperText>{this.errorMessages.role || ""}</FormHelperText>
               </FormControl>
               <FormControl
                 className={classes.formControl}

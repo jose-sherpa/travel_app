@@ -40,6 +40,7 @@ const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 function UserCard(props) {
   const classes = useStyles();
   const { id, email, role } = props.user;
+  const { isAdmin } = props;
 
   return (
     <Card className={classes.card}>
@@ -51,16 +52,19 @@ function UserCard(props) {
           {id} {role}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small">
-          <Link className={classes.link} to={`/manager/users/${id}/edit`}>
-            Edit
-          </Link>
-        </Button>
-        <Button size="small" onClick={props.onDelete}>
-          Delete
-        </Button>
-      </CardActions>
+      {(isAdmin || role !== "admin") && (
+        <CardActions>
+          <Button size="small">
+            <Link className={classes.link} to={`/manager/users/${id}/edit`}>
+              Edit
+            </Link>
+          </Button>
+          <Button size="small" onClick={props.onDelete}>
+            Delete
+          </Button>
+          {isAdmin && <Button size="small">View trips</Button>}
+        </CardActions>
+      )}
     </Card>
   );
 }
@@ -113,6 +117,8 @@ class User extends React.Component {
       return <Redirect to="/manager/users" />;
     }
 
+    const isAdmin = this.props.userStore.authStore.user.role === "admin";
+
     return (
       <div>
         <AlertDialog
@@ -135,7 +141,7 @@ class User extends React.Component {
             Yes
           </Button>
         </AlertDialog>
-        <UserCard user={user} onDelete={this.deleteUser} />
+        <UserCard user={user} onDelete={this.deleteUser} isAdmin={isAdmin} />
       </div>
     );
   }
