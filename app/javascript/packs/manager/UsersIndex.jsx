@@ -41,7 +41,7 @@ class UsersIndex extends React.Component {
     console.log("rendering users index");
     const user = this.props.userStore.user;
     if (user) {
-      console.log('redirecting')
+      console.log("redirecting");
       return <Redirect to={`/manager/users/${user.id}`} />;
     }
 

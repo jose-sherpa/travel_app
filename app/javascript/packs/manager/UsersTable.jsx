@@ -46,7 +46,7 @@ class UsersTable extends React.Component {
             name: "id",
             options: {
               filter: false,
-              sort: true,
+              sort: true
             }
           },
           {
@@ -56,7 +56,7 @@ class UsersTable extends React.Component {
               filter: true,
               sort: true,
               viewColumns: false,
-              sortDirection: "asc",
+              sortDirection: "asc"
             }
           },
           {
@@ -65,9 +65,9 @@ class UsersTable extends React.Component {
             options: {
               filter: true,
               sort: true,
-              viewColumns: false,
+              viewColumns: false
             }
-          },
+          }
         ]}
         options={{
           filterType: "dropdown",

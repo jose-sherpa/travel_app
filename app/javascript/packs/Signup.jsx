@@ -80,9 +80,7 @@ class Signup extends React.Component {
       <div style={{ padding: "10%" }}>
         <Notices notices={this.notices()} />
         <ErrorMessages errors={this.state.errors} />
-        <Typography variant="h4">
-          Please sign up to continue
-        </Typography>
+        <Typography variant="h4">Please sign up to continue</Typography>
         <Paper elevation={2} style={{ marginTop: "1rem", padding: "1rem" }}>
           <form>
             <FormGroup>

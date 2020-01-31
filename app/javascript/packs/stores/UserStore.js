@@ -33,6 +33,11 @@ class UserStore extends NetworkStore {
     this._user = user;
   }
 
+  set password(password) {
+    this.user.password = password;
+    if (!password) this.user.password_confirmation = null;
+  }
+
   @action.bound
   fetchUsers(callback) {
     this.conn
@@ -75,8 +80,9 @@ class UserStore extends NetworkStore {
         if (response.status >= 300) {
           throw new Error(`unacceptable status code ${response.status}`);
         }
-
-        this.user = response.data.user;
+        let { user } = response.data;
+        user = { password: null, password_confirmation: null, ...user };
+        this.user = user;
       })
       .catch(error => {
         console.log(error);
@@ -97,6 +103,7 @@ class UserStore extends NetworkStore {
       data: { user }
     };
 
+    console.log(user);
     let req = user.id
       ? this.conn.put(`/api/manager/users/${user.id}`, {}, config)
       : this.conn.post("/api/manager/users", {}, config);

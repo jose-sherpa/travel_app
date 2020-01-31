@@ -29,7 +29,7 @@ class AuthedBase extends React.Component {
         <NavBar />
         <Switch>
           <Route path="/trips" component={Trips} />
-          <Route path="/manager/users" component={Users}/>
+          <Route path="/manager/users" component={Users} />
         </Switch>
       </div>
     );
