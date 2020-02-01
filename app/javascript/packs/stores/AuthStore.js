@@ -18,7 +18,7 @@ export class AuthStore {
         Authorization: `Token ${value}`
       }
     })
-      .then(response => console.log(response))
+      .then(response => console.log("cookie set"))
       .catch(error => console.log(error));
   }
 

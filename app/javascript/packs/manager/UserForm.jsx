@@ -1,17 +1,13 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormLabel from "@material-ui/core/FormLabel";
 import { inject, observer } from "mobx-react";
 import { CircularProgress } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import withStyles from "@material-ui/core/styles/withStyles";
-import moment from "moment";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
 import { computed } from "mobx";
@@ -28,6 +24,12 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120
+  },
+  container: {
+    padding: 10
+  },
+  submit: {
+    marginTop: 20
   }
 });
 
@@ -101,7 +103,7 @@ class UserForm extends React.Component {
 
     return (
       <div>
-        <Paper style={{ padding: 10 }}>
+        <Paper elevation={2} className={classes.container}>
           <form className={classes.form} onSubmit={this.submit}>
             <FormGroup>
               <FormControl
@@ -180,7 +182,7 @@ class UserForm extends React.Component {
                 </FormControl>
               )}
             </FormGroup>
-            <Button style={{ marginTop: 20 }} type="submit">
+            <Button className={classes.submit} type="submit">
               Submit
             </Button>
           </form>

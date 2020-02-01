@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
 import { computed } from "mobx";
 import moment from "moment";
-import { getDaysUntilText } from "./utils/MomentHelpers";
+import { getDaysUntilText } from "../utils/MomentHelpers";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";

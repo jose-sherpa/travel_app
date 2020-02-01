@@ -4,11 +4,11 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 import Button from "@material-ui/core/Button";
 import { Switch, Route, Link, Redirect } from "react-router-dom";
-import TripsIndex from "./../TripsIndex";
-import TripForm from "./../TripForm";
+import TripsIndex from "../trips/TripsIndex";
+import TripForm from "../trips/TripForm";
 import { Provider } from "mobx-react";
 import TripStore from "./../stores/TripStore";
-import Trip from "./../Trip";
+import Trip from "../trips/Trip";
 import { inject, observer } from "mobx-react";
 
 const styles = theme => ({
@@ -24,8 +24,7 @@ const styles = theme => ({
     paddingLeft: 5
   },
   link: {
-    textDecoration: "none",
-    color: "#000"
+    textDecoration: "none"
   },
   header: {
     marginBottom: 20

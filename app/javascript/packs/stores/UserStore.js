@@ -43,7 +43,6 @@ class UserStore extends NetworkStore {
     this.conn
       .get("/api/manager/users", { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -71,7 +70,6 @@ class UserStore extends NetworkStore {
     this.conn
       .get(`/api/manager/users/${id}`, { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -103,13 +101,11 @@ class UserStore extends NetworkStore {
       data: { user }
     };
 
-    console.log(user);
     let req = user.id
       ? this.conn.put(`/api/manager/users/${user.id}`, {}, config)
       : this.conn.post("/api/manager/users", {}, config);
     req
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;

@@ -53,7 +53,7 @@ class UsersTable extends React.Component {
             name: "email",
             label: "Email",
             options: {
-              filter: true,
+              filter: false,
               sort: true,
               viewColumns: false,
               sortDirection: "asc"

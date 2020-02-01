@@ -27,13 +27,17 @@ module Api
     def user_params
       permitted = params
                   .require(:user)
-                  .permit(:email, :password, :password_confirmation, :role)
+                  .permit(:email, :password, :password_confirmation, :current_password)
 
-      if !permitted[:password].nil? && permitted[:password_confirmation].nil?
-        permitted[:password_confirmation] = ''
-      end
+      add_password_attributes(permitted) unless permitted[:password].nil?
 
       permitted
+    end
+
+    def add_password_attributes(permitted)
+      %i[password_confirmation current_password].each do |attr|
+        permitted[attr] = '' if permitted[attr].nil?
+      end
     end
   end
 end

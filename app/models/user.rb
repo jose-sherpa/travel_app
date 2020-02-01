@@ -8,7 +8,9 @@ class User < ApplicationRecord
   has_many :user_sessions, dependent: :destroy
   validates :role, inclusion: %w[admin manager], unless: -> { role.nil? }
   validate :role_can_be_changed
+  validate :current_password_valid
   attr_accessor :current_user
+  attr_writer :current_password
 
   def admin?
     role == 'admin'
@@ -19,6 +21,14 @@ class User < ApplicationRecord
   end
 
   private
+
+  def current_password_valid
+    return if current_password.nil?
+
+    pw = encrypted_password_was || encrypted_password
+    valid = Devise::Encryptor.compare(self.class, pw, current_password)
+    errors.add(:current_password, 'is invalid') unless valid
+  end
 
   def role_can_be_changed
     return if !role_changed? || current_user&.admin?

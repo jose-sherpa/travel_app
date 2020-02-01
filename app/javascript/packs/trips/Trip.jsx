@@ -9,8 +9,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { Link, Redirect } from "react-router-dom";
 import moment from "moment";
-import AlertDialog from "./shared/AlertDialog";
-import { getDaysUntilText } from "./utils/MomentHelpers";
+import AlertDialog from "../shared/AlertDialog";
+import { getDaysUntilText } from "../utils/MomentHelpers";
 
 const useStyles = makeStyles({
   card: {
