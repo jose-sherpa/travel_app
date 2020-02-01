@@ -62,7 +62,11 @@ function UserCard(props) {
           <Button size="small" onClick={props.onDelete}>
             Delete
           </Button>
-          {isAdmin && <Button size="small">View trips</Button>}
+          {isAdmin && (
+            <Link className={classes.link} to={`/admin/users/${id}/trips`}>
+              <Button size="small">View trips</Button>
+            </Link>
+          )}
         </CardActions>
       )}
     </Card>

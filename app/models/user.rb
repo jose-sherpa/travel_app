@@ -21,7 +21,7 @@ class User < ApplicationRecord
   private
 
   def role_can_be_changed
-    return unless role_changed? || current_user&.admin?
+    return if !role_changed? || current_user&.admin?
 
     if role == 'admin' || role_was == 'admin'
       errors.add(:role,

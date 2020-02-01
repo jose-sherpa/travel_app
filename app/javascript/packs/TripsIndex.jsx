@@ -41,7 +41,11 @@ class TripsIndex extends React.Component {
     console.log("rendering trips index");
     const trip = this.props.tripStore.getTrip();
     if (trip) {
-      return <Redirect to={`/trips/${trip.id}`} />;
+      const userId = this.props.tripStore.getUser()?.id;
+      const redirect = userId
+        ? `/admin/users/${userId}/trips/${trip.id}`
+        : `/trips/${trip.id}`;
+      return <Redirect to={redirect} />;
     }
 
     const { classes } = this.props;

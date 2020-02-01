@@ -89,6 +89,12 @@ class TripForm extends React.Component {
 
     const { classes } = this.props;
     const trip = this.props.tripStore.getTrip();
+    const userId = this.props.tripStore.getUser?.id;
+    if (!trip) {
+      const redirect = userId ? `/admin/users/${userId}/trips` : "/trips";
+      return <Redirect to={redirect} />;
+    }
+
     return (
       <div>
         <Paper style={{ padding: 10 }}>

@@ -128,7 +128,6 @@ class UserForm extends React.Component {
                   id="role"
                   error={Boolean(this.errorMessages.role)}
                   value={user.role || ""}
-                  disabled={user.role === "admin" && !isAdmin}
                   onChange={e => (user.role = blankToNull(e.target.value))}
                 >
                   <MenuItem value={""}>None</MenuItem>
