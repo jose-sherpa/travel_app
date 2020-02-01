@@ -90,11 +90,8 @@ class UserTrips extends React.Component {
     if (!isAdmin) return <Redirect to="/" />;
 
     const { classes } = this.props;
-    console.log(
-      `rendering user trips for path ${this.props.location.pathname}`
-    );
-    let { path } = this.props.match;
-    console.log(path);
+    const { path } = this.props.match;
+
     return (
       <Provider tripStore={this.tripsStore}>
         <div className={classes.root}>

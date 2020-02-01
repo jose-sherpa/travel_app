@@ -126,7 +126,6 @@ class User extends React.Component {
   }
 
   render() {
-    console.log(`rendering user for path ${this.props.location.pathname}`);
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) {

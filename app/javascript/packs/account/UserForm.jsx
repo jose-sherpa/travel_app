@@ -97,9 +97,6 @@ class UserForm extends React.Component {
   }
 
   render() {
-    console.log(
-      `rendering account form for path ${this.props.location.pathname}`
-    );
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) return <CircularProgress />;
