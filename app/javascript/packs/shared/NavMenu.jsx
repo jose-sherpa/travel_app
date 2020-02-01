@@ -120,6 +120,13 @@ export default inject("rootStore")(
                           <MenuItem>Users</MenuItem>
                         </Link>
                       )}
+                      <Link
+                        to="/account"
+                        className={classes.link}
+                        onClick={handleClose}
+                      >
+                        <MenuItem>My Account</MenuItem>
+                      </Link>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>

@@ -54,28 +54,21 @@ function UserCard(props) {
           {id} {role}
         </Typography>
       </CardContent>
-      {(isAdmin || role !== "admin") && (
-        <CardActions>
-          <Button size="small">
-            <Link className={classes.link} to={`/manager/users/${id}/edit`}>
-              Edit
-            </Link>
-          </Button>
-          <Button size="small" onClick={props.onDelete}>
-            Delete
-          </Button>
-          {isAdmin && (
-            <Link className={classes.link} to={`/admin/users/${id}/trips`}>
-              <Button size="small">View trips</Button>
-            </Link>
-          )}
-        </CardActions>
-      )}
+      <CardActions>
+        <Button size="small">
+          <Link className={classes.link} to={`/account/edit`}>
+            Edit
+          </Link>
+        </Button>
+        <Button size="small" onClick={props.onDelete}>
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   );
 }
 
-@inject("userStore")
+@inject("accountStore")
 @observer
 class User extends React.Component {
   constructor(props) {
@@ -88,9 +81,7 @@ class User extends React.Component {
   }
 
   componentDidMount() {
-    this.props.userStore.fetchUser(this.userID(), () =>
-      this.setState({ loading: false })
-    );
+    this.props.accountStore.fetchUser(() => this.setState({ loading: false }));
   }
 
   userID() {
@@ -103,35 +94,35 @@ class User extends React.Component {
 
   userDeleteConfirmation(result) {
     if (result) {
-      this.props.userStore.deleteUser(() =>
-        this.setState({ redirectTo: "/manager/users" })
+      this.props.accountStore.deleteUser(() =>
+        this.setState({ redirectTo: "/" })
       );
     }
     this.setState({ confirmDelete: false });
   }
 
   render() {
-    console.log(`rendering user for path ${this.props.location.pathname}`);
+    console.log(
+      `rendering account user for path ${this.props.location.pathname}`
+    );
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) {
       return <CircularProgress />;
     }
 
-    const user = this.props.userStore.user;
+    const user = this.props.accountStore.user;
     if (!user) {
-      return <Redirect to="/manager/users" />;
+      return <Redirect to="/" />;
     }
-
-    const isAdmin = this.props.userStore.authStore.user.role === "admin";
 
     return (
       <div>
         <AlertDialog
           open={this.state.confirmDelete || false}
           onClose={() => this.userDeleteConfirmation(false)}
-          title="Confirm user deletion"
-          text="Are you sure you want to delete this user?"
+          title="Confirm account deletion"
+          text="Are you sure you want to delete your account?"
         >
           <Button
             onClick={() => this.userDeleteConfirmation(false)}
@@ -147,7 +138,7 @@ class User extends React.Component {
             Yes
           </Button>
         </AlertDialog>
-        <UserCard user={user} onDelete={this.deleteUser} isAdmin={isAdmin} />
+        <UserCard user={user} onDelete={this.deleteUser} />
       </div>
     );
   }
