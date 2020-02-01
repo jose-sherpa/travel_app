@@ -9,12 +9,16 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, skip: [
-      :sessions
+    :sessions
   ]
 
   namespace :api, defaults: { format: :json } do
     get '/trips/itinerary/:date', controller: :trips, action: :itinerary
     resources :trips, except: %i[new edit]
+
+    get :user, controller: :users, action: :show
+    put :user, controller: :users, action: :update
+    delete :user, controller: :users, action: :destroy
 
     namespace :manager do
       resources :users

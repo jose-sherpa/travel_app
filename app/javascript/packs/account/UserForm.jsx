@@ -33,7 +33,7 @@ const styles = theme => ({
 
 const blankToNull = value => (value === "" ? null : value);
 
-@inject("userStore")
+@inject("accountStore")
 @observer
 class UserForm extends React.Component {
   constructor(props) {
@@ -42,34 +42,17 @@ class UserForm extends React.Component {
     this.state = {
       loading: true
     };
-    this.props.userStore.user = this.newUser();
   }
 
   componentDidMount() {
-    const {
-      userStore,
-      match: {
-        params: { id }
-      }
-    } = this.props;
-    if (!id) {
-      this.setState({ loading: false });
-    } else {
-      userStore.fetchUser(id, () => this.setState({ loading: false }));
-    }
-  }
-
-  newUser() {
-    return {
-      password: null,
-      password_confirmation: null
-    };
+    const { accountStore } = this.props;
+    accountStore.fetchUser(() => this.setState({ loading: false }));
   }
 
   submit(e) {
     e.preventDefault();
     this.setState({ loading: true });
-    this.props.userStore.postUser(response => {
+    this.props.accountStore.postUser(response => {
       this.setState({ loading: false, ...response });
     });
   }
@@ -87,17 +70,16 @@ class UserForm extends React.Component {
   }
 
   render() {
-    // console.log(`rendering user form for path ${this.props.location.pathname}`)
+    console.log(
+      `rendering account form for path ${this.props.location.pathname}`
+    );
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) return <CircularProgress />;
 
     const { classes } = this.props;
-    const user = this.props.userStore.user;
-    const isAdmin = this.props.userStore.authStore.user.role === "admin";
-
-    if (!isAdmin && user.role === "admin")
-      return <Redirect to="/manager/users" />;
+    const user = this.props.accountStore.user;
+    if (!user) return <Redirect to="/" />;
 
     return (
       <div>
@@ -121,20 +103,6 @@ class UserForm extends React.Component {
                   {this.errorMessages.email || ""}
                 </FormHelperText>
               </FormControl>
-              <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="role">Role</InputLabel>
-                <Select
-                  id="role"
-                  error={Boolean(this.errorMessages.role)}
-                  value={user.role || ""}
-                  onChange={e => (user.role = blankToNull(e.target.value))}
-                >
-                  <MenuItem value={""}>None</MenuItem>
-                  <MenuItem value={"manager"}>Manager</MenuItem>
-                  {isAdmin && <MenuItem value={"admin"}>Admin</MenuItem>}
-                </Select>
-                <FormHelperText>{this.errorMessages.role || ""}</FormHelperText>
-              </FormControl>
               <FormControl
                 className={classes.formControl}
                 error={Boolean(this.errorMessages.password)}
@@ -148,7 +116,7 @@ class UserForm extends React.Component {
                   placeholder="password"
                   type="password"
                   onChange={e =>
-                    (this.props.userStore.password = blankToNull(
+                    (this.props.accountStore.password = blankToNull(
                       e.target.value
                     ))
                   }

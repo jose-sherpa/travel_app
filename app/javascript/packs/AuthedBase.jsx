@@ -6,6 +6,12 @@ import Signup from "./Signup";
 import Trips from "./Trips";
 import Users from "./manager/Users";
 import UserTrips from "./admin/UserTrips";
+import Account from "./Account";
+
+const HomeRedirect = () => {
+  console.log("redirecting to home");
+  return <Redirect to="/" />;
+};
 
 @inject("rootStore")
 @observer
@@ -32,7 +38,8 @@ class AuthedBase extends React.Component {
           <Route path="/trips" component={Trips} />
           <Route path="/manager/users" component={Users} />
           <Route path="/admin/users/:user_id/trips" component={UserTrips} />
-          <Route path="/"><Redirect to="/"/></Route>
+          <Route path="/account" component={Account} />
+          <Route path="/" component={HomeRedirect} />
         </Switch>
       </div>
     );
