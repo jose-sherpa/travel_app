@@ -8,6 +8,8 @@ import ErrorMessages from "./shared/ErrorMessages";
 import Notices from "./shared/Notices";
 import { computed } from "mobx";
 import LinkButton from "./shared/LinkButton";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 @inject("rootStore")
 @observer
@@ -78,32 +80,41 @@ class Signup extends React.Component {
       <div style={{ padding: "10%" }}>
         <Notices notices={this.notices()} />
         <ErrorMessages errors={this.state.errors} />
-        <h2>Sign up</h2>
-        <form>
-          <FormGroup>
-            <Input
-              id="email"
-              placeholder="email"
-              required={true}
-              type="email"
-            />
-            <Input
-              id="password"
-              placeholder="password"
-              required={true}
-              type="password"
-            />
-            <Input
-              id="password_confirmation"
-              placeholder="confirm password"
-              required={true}
-              type="password"
-            />
-          </FormGroup>
-          <Button onClick={this.handleSignup} type="submit">
-            Sign up
-          </Button>
-        </form>
+        <Typography variant="h4">Please sign up to continue</Typography>
+        <Paper elevation={2} style={{ marginTop: "1rem", padding: "1rem" }}>
+          <form>
+            <FormGroup>
+              <Input
+                id="email"
+                placeholder="email"
+                required={true}
+                type="email"
+                style={{ marginTop: "1rem" }}
+              />
+              <Input
+                id="password"
+                placeholder="password"
+                required={true}
+                type="password"
+                style={{ marginTop: "1rem" }}
+              />
+              <Input
+                id="password_confirmation"
+                placeholder="confirm password"
+                required={true}
+                type="password"
+                style={{ marginTop: "1rem" }}
+              />
+            </FormGroup>
+            <Button
+              onClick={this.handleSignup}
+              type="submit"
+              style={{ marginTop: "1rem" }}
+            >
+              Sign up
+            </Button>
+          </form>
+        </Paper>
         <br />
         <LinkButton to="/users/login">Log in</LinkButton>
       </div>

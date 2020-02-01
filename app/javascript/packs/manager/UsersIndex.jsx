@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
 import { computed } from "mobx";
 import { Redirect } from "react-router-dom";
-import TripsTable from "./TripsTable";
+import UsersTable from "./UsersTable";
 
 const styles = theme => ({
   root: {
@@ -20,45 +20,42 @@ const styles = theme => ({
   }
 });
 
-@inject("tripStore")
+@inject("userStore")
 @observer
-class TripsIndex extends React.Component {
+class UsersIndex extends React.Component {
   constructor(props) {
     super(props);
-    this.props.tripStore.setTrip(null);
+    this.props.userStore.user = null;
   }
 
   componentDidMount() {
-    this.props.tripStore.fetchTrips();
+    this.props.userStore.fetchUsers();
   }
 
   @computed
-  get trips() {
-    return this.props.tripStore.getTrips();
+  get users() {
+    return this.props.userStore.users;
   }
 
   render() {
-    console.log("rendering trips index");
-    const trip = this.props.tripStore.getTrip();
-    if (trip) {
-      const userId = this.props.tripStore.getUser()?.id;
-      const redirect = userId
-        ? `/admin/users/${userId}/trips/${trip.id}`
-        : `/trips/${trip.id}`;
-      return <Redirect to={redirect} />;
+    console.log("rendering users index");
+    const user = this.props.userStore.user;
+    if (user) {
+      console.log("redirecting");
+      return <Redirect to={`/manager/users/${user.id}`} />;
     }
 
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <TripsTable
-          trips={this.trips}
+        <UsersTable
+          users={this.users}
           tableOptions={{
             print: false,
             download: false,
             onRowClick: (rowData, rowMeta) => {
-              this.props.tripStore.setTrip(this.trips[rowMeta.dataIndex]);
+              this.props.userStore.user = this.users[rowMeta.dataIndex];
             }
           }}
         />
@@ -67,4 +64,4 @@ class TripsIndex extends React.Component {
   }
 }
 
-export default withStyles(styles)(TripsIndex);
+export default withStyles(styles)(UsersIndex);

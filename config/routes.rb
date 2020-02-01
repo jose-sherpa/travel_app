@@ -14,7 +14,17 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     get '/trips/itinerary/:date', controller: :trips, action: :itinerary
-    resources :trips, except: %i[new]
+    resources :trips, except: %i[new edit]
+
+    namespace :manager do
+      resources :users
+    end
+
+    namespace :admin do
+      get '/users/:user_id/trips', controller: :trips, action: :index
+      post '/users/:user_id/trips', controller: :trips, action: :create
+      resources :trips, except: %i[index create new edit]
+    end
   end
 
   root controller: :react_app, action: :home

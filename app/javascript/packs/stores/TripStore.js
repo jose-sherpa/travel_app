@@ -6,9 +6,19 @@ const validateStatus = status => status >= 200 && status < 500;
 class TripStore extends NetworkStore {
   @observable trips = [];
   @observable trip;
+  @observable user;
 
   constructor(authStore) {
     super(authStore);
+  }
+
+  @action.bound
+  setUser(user) {
+    this.user = user;
+  }
+
+  getUser() {
+    return this.user;
   }
 
   getTrips() {
@@ -35,8 +45,12 @@ class TripStore extends NetworkStore {
 
   @action.bound
   fetchTrips(callback) {
+    const url = this.user?.id
+      ? `/api/admin/users/${this.user.id}/trips`
+      : "/api/trips";
+
     this.conn
-      .get("/api/trips", { validateStatus })
+      .get(url, { validateStatus })
       .then(response => {
         console.log(response);
         if (response.status === 401) {
@@ -63,8 +77,10 @@ class TripStore extends NetworkStore {
 
   @action.bound
   fetchTrip(id, callback) {
+    const url = this.user?.id ? `/api/admin/trips/${id}` : `/api/trips/${id}`;
+    console.log(url);
     this.conn
-      .get(`/api/trips/${id}`, { validateStatus })
+      .get(url, { validateStatus })
       .then(response => {
         console.log(response);
         if (response.status === 401) {
@@ -97,9 +113,15 @@ class TripStore extends NetworkStore {
       data: { trip }
     };
 
+    const userId = this.user?.id;
+    const postUrl = userId ? `/api/admin/users/${userId}/trips` : "/api/trips";
+    const putUrl = userId
+      ? `/api/admin/trips/${trip.id}`
+      : `/api/trips/${trip.id}`;
+
     let req = trip.id
-      ? this.conn.put(`/api/trips/${trip.id}`, {}, config)
-      : this.conn.post("/api/trips", {}, config);
+      ? this.conn.put(putUrl, {}, config)
+      : this.conn.post(postUrl, {}, config);
     req
       .then(response => {
         console.log(response);
@@ -109,9 +131,13 @@ class TripStore extends NetworkStore {
         }
 
         if (response.status === 404) {
-          callback({ redirectTo: "/trips" });
+          const redirect = userId ? `/admin/users/${userId}/trips` : "/trips";
+          callback({ redirectTo: redirect });
         } else if (response.data.trip) {
-          callback({ redirectTo: `/trips/${response.data.trip.id}` });
+          const redirect = userId
+            ? `/admin/users/${userId}/trips/${response.data.trip.id}`
+            : `/trips/${response.data.trip.id}`;
+          callback({ redirectTo: redirect });
         } else if (response.data.errors) {
           callback(response.data);
         }
@@ -124,8 +150,10 @@ class TripStore extends NetworkStore {
 
   @action.bound
   deleteTrip(callback) {
+    const id = this.getTrip().id;
+    const url = this.user?.id ? `/api/admin/trips/${id}` : `/api/trips/${id}`;
     this.conn
-      .delete(`/api/trips/${this.getTrip().id}`, { validateStatus })
+      .delete(url, { validateStatus })
       .catch(response => {
         if (response.status === 401) this.authStore.apiKey = null;
       })

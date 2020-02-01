@@ -40,7 +40,13 @@ const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
 function TripCard(props) {
   const classes = useStyles();
+  const { userId } = props;
   const { id, destination, start_date, end_date, comment } = props.trip;
+
+  const editUrl = userId
+    ? `/admin/users/${userId}/trips/${id}/edit`
+    : `/trips/${id}/edit`;
+
   const startDate = convertDate(start_date);
   const endDate = convertDate(end_date);
   const now = moment();
@@ -72,7 +78,7 @@ function TripCard(props) {
       </CardContent>
       <CardActions>
         <Button size="small">
-          <Link className={classes.link} to={`/trips/${id}/edit`}>
+          <Link className={classes.link} to={editUrl}>
             Edit
           </Link>
         </Button>
@@ -112,9 +118,7 @@ class Trip extends React.Component {
 
   tripDeleteConfirmation(result) {
     if (result) {
-      this.props.tripStore.deleteTrip(() =>
-        this.setState({ redirectTo: "/trips" })
-      );
+      this.props.tripStore.deleteTrip(() => this.props.tripStore.setTrip(null));
     }
     this.setState({ confirmDelete: false });
   }
@@ -128,8 +132,11 @@ class Trip extends React.Component {
     }
 
     const trip = this.props.tripStore.getTrip();
+    const userId = this.props.tripStore.getUser()?.id;
+
     if (!trip) {
-      return <Redirect to="/trips" />;
+      const redirect = userId ? `/admin/users/${userId}/trips` : "/trips";
+      return <Redirect to={redirect} />;
     }
 
     return (
@@ -154,7 +161,11 @@ class Trip extends React.Component {
             Yes
           </Button>
         </AlertDialog>
-        <TripCard trip={trip} onDelete={this.deleteTrip} />
+        <TripCard
+          trip={trip}
+          onDelete={this.deleteTrip}
+          userId={this.props.tripStore.user?.id}
+        />
       </div>
     );
   }
