@@ -7,11 +7,11 @@ RSpec.describe RegistrationsController, type: :request do
     let(:password_confirmation) { password }
     let(:params) do
       {
-          user: {
-              email: email,
-              password: password,
-              password_confirmation: password_confirmation
-          }
+        user: {
+          email: email,
+          password: password,
+          password_confirmation: password_confirmation
+        }
       }
     end
     let(:parsed_body) { JSON.parse(response.body, symbolize_names: true) }
@@ -31,12 +31,12 @@ RSpec.describe RegistrationsController, type: :request do
     describe 'when posted with role' do
       let(:params) do
         {
-            user: {
-                email: email,
-                password: password,
-                password_confirmation: password_confirmation,
-                role: 'manager'
-            }
+          user: {
+            email: email,
+            password: password,
+            password_confirmation: password_confirmation,
+            role: 'manager'
+          }
         }
       end
 

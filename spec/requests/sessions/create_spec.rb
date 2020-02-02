@@ -7,10 +7,10 @@ RSpec.describe SessionsController, type: :request do
     let(:password) { Faker::Internet.password(min_length: 8) }
     let(:params) do
       {
-          user: {
-              email: email,
-              password: password
-          }
+        user: {
+          email: email,
+          password: password
+        }
       }
     end
     let(:parsed_body) { JSON.parse(response.body, symbolize_names: true) }

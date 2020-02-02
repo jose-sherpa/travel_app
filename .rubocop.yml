@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.6
   Exclude:
     - 'Guardfile'
     - 'bin/*'
@@ -8,6 +8,7 @@ AllCops:
     - 'script/**/*'
     - 'log/**/*'
     - 'tmp/**/*'
+    - 'app/javascript/**/*'
     - !ruby/regexp /old_and_unused\.rb$/
 Documentation:
   Enabled: false
@@ -33,6 +34,4 @@ Style/TrailingCommaInArguments:
 Style/TrailingCommaInArrayLiteral:
   Enabled: false
 Style/TrailingCommaInHashLiteral:
-  Enabled: false
-Style/TrailingCommaInLiteral:
   Enabled: false
