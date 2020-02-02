@@ -9,6 +9,6 @@ RSpec.shared_context 'token auth' do
   end
 
   def api_token(user_session)
-    SessionsController.new.create_token(user_session)
+    SessionsController.new.create_token(id: user_session.id)
   end
 end
