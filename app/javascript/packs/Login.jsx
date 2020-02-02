@@ -40,9 +40,19 @@ class Login extends React.Component {
     return [this.props.location?.state?.notice, this.query.get("notice")];
   }
 
+  @computed
+  get errorMessages() {
+    let { errors } = this.state;
+    if (!errors) return {};
+
+    let errorMessages = {};
+    Object.entries(errors).forEach(
+      ([key, value]) => (errorMessages[key] = value[0])
+    );
+    return errorMessages;
+  }
+
   render() {
-    console.log(this.props.location);
-    console.log("rendering login");
     if (this.props.rootStore.apiKey) {
       return <Redirect to="/" />;
     }
@@ -50,7 +60,6 @@ class Login extends React.Component {
     return (
       <div style={{ padding: "10%" }}>
         <Notices notices={this.notices()} />
-        <ErrorMessages errors={this.state.errors} />
         <Typography variant="h4">Log in to continue</Typography>
         <Paper elevation={2} style={{ marginTop: "1rem", padding: "1rem" }}>
           <form>

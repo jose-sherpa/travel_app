@@ -1,5 +1,4 @@
 import { observable } from "mobx";
-import axios from "axios";
 
 export class AuthStore {
   @observable _apiKey = null;
@@ -18,7 +17,7 @@ export class AuthStore {
         Authorization: `Token ${value}`
       }
     })
-      .then(response => console.log("cookie set"))
+      .then(response => {})
       .catch(error => console.log(error));
   }
 

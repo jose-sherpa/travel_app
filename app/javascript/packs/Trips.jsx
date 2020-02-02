@@ -79,8 +79,8 @@ class Trips extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(`rendering trips for path ${this.props.location.pathname}`);
-    let { path } = this.props.match;
+    const { path } = this.props.match;
+
     return (
       <Provider tripStore={this.tripsStore}>
         <div className={classes.root}>

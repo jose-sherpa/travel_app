@@ -67,7 +67,6 @@ class Signup extends React.Component {
   }
 
   render() {
-    console.log("rendering signup");
     if (this.props.rootStore.apiKey) {
       return <Redirect to="/" />;
     }

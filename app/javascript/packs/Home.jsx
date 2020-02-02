@@ -14,7 +14,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log("rendering home");
     return (
       <BrowserRouter>
         <Switch>

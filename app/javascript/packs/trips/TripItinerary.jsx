@@ -50,7 +50,7 @@ const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
 function TripCard({ trip, style }) {
   const classes = useStyles();
-  const { id, destination, start_date, end_date, comment } = trip;
+  const { destination, start_date, end_date, comment } = trip;
   const startDate = convertDate(start_date);
   const endDate = convertDate(end_date);
   const now = moment();
@@ -121,8 +121,6 @@ class TripItinerary extends React.Component {
   }
 
   render() {
-    console.log("rendering trip itinerary");
-
     const { classes } = this.props;
 
     return (

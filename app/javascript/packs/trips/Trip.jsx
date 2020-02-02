@@ -54,7 +54,7 @@ function TripCard(props) {
   const daysUntilText = getDaysUntilText(startMoment, now);
 
   return (
-    <Card className={classes.card}>
+    <Card elevation={2} className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {destination}
@@ -124,7 +124,6 @@ class Trip extends React.Component {
   }
 
   render() {
-    console.log(`rendering trip for path ${this.props.location.pathname}`);
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) {

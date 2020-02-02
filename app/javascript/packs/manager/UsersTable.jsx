@@ -27,8 +27,6 @@ const styles = theme => ({
   }
 });
 
-const convertDate = date => moment(date).format("M-D-YY");
-
 class UsersTable extends React.Component {
   constructor(props) {
     super(props);
