@@ -27,8 +27,6 @@ const styles = theme => ({
   }
 });
 
-const convertDate = date => moment(date).format("M-D-YY");
-
 class UsersTable extends React.Component {
   constructor(props) {
     super(props);
@@ -53,7 +51,7 @@ class UsersTable extends React.Component {
             name: "email",
             label: "Email",
             options: {
-              filter: true,
+              filter: false,
               sort: true,
               viewColumns: false,
               sortDirection: "asc"

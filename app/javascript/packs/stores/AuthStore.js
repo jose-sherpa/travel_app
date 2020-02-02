@@ -1,5 +1,4 @@
 import { observable } from "mobx";
-import axios from "axios";
 
 export class AuthStore {
   @observable _apiKey = null;
@@ -18,8 +17,8 @@ export class AuthStore {
         Authorization: `Token ${value}`
       }
     })
-      .then(response => console.log(response))
-      .catch(error => console.log(error));
+      .then(response => {})
+      .catch(error => {});
   }
 
   get currentUser() {

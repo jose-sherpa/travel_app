@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
 import { computed } from "mobx";
 import moment from "moment";
-import { getDaysUntilText } from "./utils/MomentHelpers";
+import { getDaysUntilText } from "../utils/MomentHelpers";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -25,6 +25,7 @@ const styles = theme => ({
     color: "gray"
   },
   card: {
+    marginTop: theme.spacing(2),
     minWidth: 275
   },
   bullet: {
@@ -48,9 +49,10 @@ const useStyles = makeStyles(styles);
 
 const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
-function TripCard({ trip, style }) {
+function TripCard({ trip }) {
   const classes = useStyles();
-  const { id, destination, start_date, end_date, comment } = trip;
+
+  const { destination, start_date, end_date, comment } = trip;
   const startDate = convertDate(start_date);
   const endDate = convertDate(end_date);
   const now = moment();
@@ -58,7 +60,7 @@ function TripCard({ trip, style }) {
   const daysUntilText = getDaysUntilText(startMoment, now);
 
   return (
-    <Card className={classes.card} style={style}>
+    <Card elevation={2} className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {destination}
@@ -115,14 +117,10 @@ class TripItinerary extends React.Component {
       );
     }
 
-    return this.trips.map(trip => (
-      <TripCard style={{ marginTop: "1rem" }} key={trip.id} trip={trip} />
-    ));
+    return this.trips.map(trip => <TripCard key={trip.id} trip={trip} />);
   }
 
   render() {
-    console.log("rendering trip itinerary");
-
     const { classes } = this.props;
 
     return (

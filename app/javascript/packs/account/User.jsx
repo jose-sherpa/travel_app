@@ -23,7 +23,8 @@ const useStyles = makeStyles({
   title: {
     fontSize: 14
   },
-  pos: {
+  role: {
+    marginTop: 10,
     marginBottom: 12
   },
   link: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles({
   },
   daysUntil: {
     marginLeft: 10
+  },
+  typography: {
+    marginTop: 10
   }
 });
 
@@ -40,18 +44,24 @@ const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 function UserCard(props) {
   const classes = useStyles();
   const {
-    isAdmin,
     user: { id, email, role }
   } = props;
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} elevation={2}>
       <CardContent>
-        <Typography variant="h5" component="h2">
+        <Typography
+          className={classes.typography}
+          color="textSecondary"
+          variant="h4"
+        >
+          Your account
+        </Typography>
+        <Typography className={classes.typography} variant="h5" component="h2">
           {email}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          {id} {role}
+        <Typography className={classes.role} color="textSecondary">
+          {role}
         </Typography>
       </CardContent>
       <CardActions>
@@ -102,9 +112,6 @@ class User extends React.Component {
   }
 
   render() {
-    console.log(
-      `rendering account user for path ${this.props.location.pathname}`
-    );
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) {

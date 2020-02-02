@@ -83,9 +83,8 @@ class Users extends React.Component {
     if (!isManager) return <Redirect to="/" />;
 
     const { classes } = this.props;
-    console.log(`rendering users for path ${this.props.location.pathname}`);
     let { path } = this.props.match;
-    console.log(path);
+
     return (
       <Provider userStore={this.userStore}>
         <div className={classes.root}>

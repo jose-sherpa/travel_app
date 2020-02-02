@@ -52,7 +52,6 @@ class TripStore extends NetworkStore {
     this.conn
       .get(url, { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -65,7 +64,6 @@ class TripStore extends NetworkStore {
         this.setTrips(response.data.trips);
       })
       .catch(error => {
-        console.log(error);
         this.setTrips([]);
       })
       .finally(() => {
@@ -78,11 +76,9 @@ class TripStore extends NetworkStore {
   @action.bound
   fetchTrip(id, callback) {
     const url = this.user?.id ? `/api/admin/trips/${id}` : `/api/trips/${id}`;
-    console.log(url);
     this.conn
       .get(url, { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -95,7 +91,6 @@ class TripStore extends NetworkStore {
         this.setTrip(response.data.trip);
       })
       .catch(error => {
-        console.log(error);
         this.setTrip(null);
       })
       .finally(() => {
@@ -124,7 +119,6 @@ class TripStore extends NetworkStore {
       : this.conn.post(postUrl, {}, config);
     req
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -143,7 +137,6 @@ class TripStore extends NetworkStore {
         }
       })
       .catch(error => {
-        console.log(error);
         callback({ error });
       });
   }
@@ -166,7 +159,6 @@ class TripStore extends NetworkStore {
     this.conn
       .get(`/api/trips/itinerary/${nextMonth}`, { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -179,7 +171,6 @@ class TripStore extends NetworkStore {
         this.setTrips(response.data.trips);
       })
       .catch(error => {
-        console.log(error);
         this.setTrips([]);
       })
       .finally(() => {

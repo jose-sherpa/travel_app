@@ -2,7 +2,7 @@ import React from "react";
 import MUIDataTable from "mui-datatables";
 import moment from "moment";
 import { withStyles } from "@material-ui/core/styles";
-import { getDaysUntilText } from "./utils/MomentHelpers";
+import { getDaysUntilText } from "../utils/MomentHelpers";
 
 const maxCommentLength = 60;
 

@@ -4,6 +4,7 @@ class SessionsController < Devise::SessionsController
   include JwtManagement
   include DisableForgeryProtection
   skip_before_action :verify_signed_out_user
+  skip_before_action :require_no_authentication, only: %i[create]
 
   def create
     user = User.find_by(email: login_params[:email])
@@ -24,7 +25,7 @@ class SessionsController < Devise::SessionsController
   def destroy
     reset_session
     session = UserSession.find_by(id: token_payload&.dig('data', 'id'))
-    session&.update(deleted: true)
+    session&.destroy
     head 200
   end
 
@@ -45,7 +46,6 @@ class SessionsController < Devise::SessionsController
 
   def get_token
     rack_session = warden.env['rack.session'] || {}
-    puts warden.env['rack.session'].to_h
     session = UserSession.active.find_by(id: rack_session['user_session_id'])
     if session.nil?
       head 401

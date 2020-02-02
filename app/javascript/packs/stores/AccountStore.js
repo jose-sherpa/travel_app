@@ -29,7 +29,6 @@ class AccountStore extends NetworkStore {
     this.conn
       .get(`/api/user`, { validateStatus })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -43,7 +42,6 @@ class AccountStore extends NetworkStore {
         this.user = user;
       })
       .catch(error => {
-        console.log(error);
         this.user = null;
       })
       .finally(() => {
@@ -61,11 +59,9 @@ class AccountStore extends NetworkStore {
       data: { user }
     };
 
-    console.log(user);
     this.conn
       .put(`/api/user`, {}, config)
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           this.authStore.apiKey = null;
           return;
@@ -80,7 +76,6 @@ class AccountStore extends NetworkStore {
         }
       })
       .catch(error => {
-        console.log(error);
         callback({ error });
       });
   }

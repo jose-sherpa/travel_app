@@ -38,7 +38,6 @@ class TripsIndex extends React.Component {
   }
 
   render() {
-    console.log("rendering trips index");
     const trip = this.props.tripStore.getTrip();
     if (trip) {
       const userId = this.props.tripStore.getUser()?.id;

@@ -7,9 +7,32 @@ import { Redirect, Link } from "react-router-dom";
 import Notices from "./shared/Notices";
 import { computed } from "mobx";
 import LinkButton from "./shared/LinkButton";
-import ErrorMessages from "./shared/ErrorMessages";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import withStyles from "@material-ui/core/styles/withStyles";
+
+const styles = theme => ({
+  root: {
+    padding: "10%"
+  },
+  header: {
+    marginBottom: theme.spacing(2)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  container: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1)
+  },
+  submit: {
+    marginTop: theme.spacing(2)
+  }
+});
 
 @inject("rootStore")
 @observer
@@ -18,14 +41,15 @@ class Login extends React.Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.state = {
-      errors: null
+      errors: null,
+      email: null,
+      password: null
     };
   }
 
   handleLogin(e) {
     e.preventDefault();
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
+    const { email, password } = this.state;
     this.props.rootStore.login(email, password, errors => {
       this.setState({ errors });
     });
@@ -40,40 +64,78 @@ class Login extends React.Component {
     return [this.props.location?.state?.notice, this.query.get("notice")];
   }
 
+  @computed
+  get errorMessages() {
+    let { errors } = this.state;
+    if (!errors) return {};
+
+    let errorMessages = {};
+    Object.entries(errors).forEach(
+      ([key, value]) => (errorMessages[key] = value[0])
+    );
+    return errorMessages;
+  }
+
   render() {
-    console.log(this.props.location);
-    console.log("rendering login");
     if (this.props.rootStore.apiKey) {
       return <Redirect to="/" />;
     }
 
+    const { classes } = this.props;
+    const { email, password } = this.state;
+
     return (
-      <div style={{ padding: "10%" }}>
+      <div className={classes.root}>
         <Notices notices={this.notices()} />
-        <ErrorMessages errors={this.state.errors} />
-        <Typography variant="h4">Log in to continue</Typography>
-        <Paper elevation={2} style={{ marginTop: "1rem", padding: "1rem" }}>
+        <Typography variant="h4" className={classes.header}>
+          Log in to continue
+        </Typography>
+        <Paper elevation={2} className={classes.container}>
+          {this.errorMessages.credentials && (
+            <FormHelperText error={true} className={classes.formControl}>
+              Credentials {this.errorMessages.credentials}
+            </FormHelperText>
+          )}
           <form>
             <FormGroup>
-              <Input
-                id="email"
-                placeholder="email"
-                required={true}
-                type="email"
-                style={{ marginTop: "1rem" }}
-              />
-              <Input
-                id="password"
-                placeholder="password"
-                required={true}
-                type="password"
-                style={{ marginTop: "1rem" }}
-              />
+              <FormControl
+                className={classes.formControl}
+                error={Boolean(this.errorMessages.email)}
+              >
+                <InputLabel htmlFor="email">Email</InputLabel>
+                <Input
+                  id="email"
+                  value={email || ""}
+                  placeholder="email"
+                  type="email"
+                  required={true}
+                  onChange={e => this.setState({ email: e.target.value })}
+                />
+                <FormHelperText>
+                  {this.errorMessages.email || ""}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                className={classes.formControl}
+                error={Boolean(this.errorMessages.password)}
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  id="password"
+                  value={password || ""}
+                  placeholder="password"
+                  type="password"
+                  onChange={e => this.setState({ password: e.target.value })}
+                />
+                <FormHelperText>
+                  {this.errorMessages.password || ""}
+                </FormHelperText>
+              </FormControl>
             </FormGroup>
             <Button
               onClick={this.handleLogin}
               type="submit"
-              style={{ marginTop: "1rem" }}
+              className={classes.submit}
             >
               Log in
             </Button>
@@ -86,4 +148,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withStyles(styles)(Login);

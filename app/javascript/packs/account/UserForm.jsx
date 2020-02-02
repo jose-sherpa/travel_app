@@ -1,22 +1,18 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormLabel from "@material-ui/core/FormLabel";
 import { inject, observer } from "mobx-react";
 import { CircularProgress } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import withStyles from "@material-ui/core/styles/withStyles";
-import moment from "moment";
 import Button from "@material-ui/core/Button";
 import { Redirect } from "react-router-dom";
 import { computed } from "mobx";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import AlertDialog from "../shared/AlertDialog";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   form: {},
@@ -28,6 +24,16 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120
+  },
+  header: {
+    margin: 10,
+    marginBottom: 10
+  },
+  container: {
+    padding: 10
+  },
+  submit: {
+    marginTop: 20
   }
 });
 
@@ -50,16 +56,37 @@ class UserForm extends React.Component {
   }
 
   submit(e) {
-    e.preventDefault();
+    e?.preventDefault();
+    const user = this.props.accountStore.user;
+
+    if (user.password && !user.current_password) {
+      this.setState({ passwordRequired: true });
+      return;
+    }
+
     this.setState({ loading: true });
     this.props.accountStore.postUser(response => {
+      this.props.accountStore.user.current_password = null;
       this.setState({ loading: false, ...response });
     });
   }
 
+  userPasswordEntered(result) {
+    let errors = Object.assign({}, this.state.errors);
+
+    if (result) {
+      this.submit();
+    } else {
+      if (errors) delete errors.current_password;
+      this.props.accountStore.user.current_password = null;
+    }
+
+    this.setState({ passwordRequired: false, errors });
+  }
+
   @computed
   get errorMessages() {
-    let { errors } = this.state;
+    const { errors } = this.state;
     if (!errors) return {};
 
     let errorMessages = {};
@@ -70,9 +97,6 @@ class UserForm extends React.Component {
   }
 
   render() {
-    console.log(
-      `rendering account form for path ${this.props.location.pathname}`
-    );
     if (this.state.redirectTo) return <Redirect to={this.state.redirectTo} />;
 
     if (this.state.loading) return <CircularProgress />;
@@ -81,9 +105,21 @@ class UserForm extends React.Component {
     const user = this.props.accountStore.user;
     if (!user) return <Redirect to="/" />;
 
+    const alertOpen =
+      this.state.passwordRequired ||
+      Boolean(this.errorMessages.current_password) ||
+      false;
+
     return (
       <div>
-        <Paper style={{ padding: 10 }}>
+        <Paper elevation={2} className={classes.container}>
+          <Typography
+            className={classes.header}
+            variant="h5"
+            color="textSecondary"
+          >
+            Edit your account
+          </Typography>
           <form className={classes.form} onSubmit={this.submit}>
             <FormGroup>
               <FormControl
@@ -148,11 +184,53 @@ class UserForm extends React.Component {
                 </FormControl>
               )}
             </FormGroup>
-            <Button style={{ marginTop: 20 }} type="submit">
+            <Button className={classes.submit} type="submit">
               Submit
             </Button>
           </form>
         </Paper>
+        <AlertDialog
+          open={alertOpen}
+          onClose={() => this.userPasswordEntered(false)}
+          title="Password required"
+          text="Please enter your current password"
+          content={
+            <FormControl
+              error={Boolean(this.errorMessages.current_password)}
+              fullWidth
+            >
+              <Input
+                id="current_password"
+                value={user.current_password || ""}
+                placeholder="current password"
+                type="password"
+                required={true}
+                onChange={e =>
+                  (user.current_password = blankToNull(e.target.value))
+                }
+              />
+              <FormHelperText>
+                {this.errorMessages.current_password || ""}
+              </FormHelperText>
+            </FormControl>
+          }
+        >
+          <Button
+            onClick={() => this.userPasswordEntered(false)}
+            color="primary"
+            autoFocus
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => this.userPasswordEntered(true)}
+            color="primary"
+            disabled={!user.current_password}
+            type="submit"
+          >
+            Submit
+          </Button>
+        </AlertDialog>
       </div>
     );
   }

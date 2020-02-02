@@ -1,5 +1,4 @@
 import { action, computed } from "mobx";
-import axios from "axios";
 import { AuthStore } from "./AuthStore";
 import NetworkStore from "./NetworkStore";
 

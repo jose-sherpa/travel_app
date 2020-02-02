@@ -4,12 +4,35 @@ import Button from "@material-ui/core/Button";
 import { FormGroup } from "@material-ui/core";
 import { inject, observer } from "mobx-react";
 import { Link, Redirect } from "react-router-dom";
-import ErrorMessages from "./shared/ErrorMessages";
 import Notices from "./shared/Notices";
 import { computed } from "mobx";
 import LinkButton from "./shared/LinkButton";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import withStyles from "@material-ui/core/styles/withStyles";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
+const styles = theme => ({
+  root: {
+    padding: "10%"
+  },
+  header: {
+    marginBottom: theme.spacing(2)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  container: {
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1)
+  },
+  submit: {
+    marginTop: theme.spacing(2)
+  }
+});
 
 @inject("rootStore")
 @observer
@@ -18,18 +41,20 @@ class Signup extends React.Component {
     super(props);
     this.state = {
       redirectTo: null,
-      errors: null
+      errors: null,
+      email: null,
+      password: null,
+      passwordConfirmation: null
     };
     this.handleSignup = this.handleSignup.bind(this);
   }
 
   handleSignup(e) {
     e.preventDefault();
-    let { email, password, passwordConfirmation } = this.signupParams();
+    const { email, password, passwordConfirmation } = this.state;
     this.props.rootStore
       .signup(email, password, passwordConfirmation)
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
           this.setState({
             redirectTo: {
@@ -48,15 +73,6 @@ class Signup extends React.Component {
       });
   }
 
-  signupParams() {
-    return {
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value,
-      passwordConfirmation: document.getElementById("password_confirmation")
-        .value
-    };
-  }
-
   @computed
   get query() {
     return new URLSearchParams(this.props.location.search);
@@ -66,8 +82,19 @@ class Signup extends React.Component {
     return [this.props.location?.state?.notice, this.query.get("notice")];
   }
 
+  @computed
+  get errorMessages() {
+    let { errors } = this.state;
+    if (!errors) return {};
+
+    let errorMessages = {};
+    Object.entries(errors).forEach(
+      ([key, value]) => (errorMessages[key] = value[0])
+    );
+    return errorMessages;
+  }
+
   render() {
-    console.log("rendering signup");
     if (this.props.rootStore.apiKey) {
       return <Redirect to="/" />;
     }
@@ -76,40 +103,76 @@ class Signup extends React.Component {
       return <Redirect to={this.state.redirectTo} />;
     }
 
+    const { classes } = this.props;
+    const { email, password, passwordConfirmation } = this.state;
+
     return (
       <div style={{ padding: "10%" }}>
         <Notices notices={this.notices()} />
-        <ErrorMessages errors={this.state.errors} />
-        <Typography variant="h4">Please sign up to continue</Typography>
-        <Paper elevation={2} style={{ marginTop: "1rem", padding: "1rem" }}>
+        <Typography className={classes.header} variant="h4">
+          Please sign up to continue
+        </Typography>
+        <Paper elevation={2} className={classes.container}>
           <form>
             <FormGroup>
-              <Input
-                id="email"
-                placeholder="email"
-                required={true}
-                type="email"
-                style={{ marginTop: "1rem" }}
-              />
-              <Input
-                id="password"
-                placeholder="password"
-                required={true}
-                type="password"
-                style={{ marginTop: "1rem" }}
-              />
-              <Input
-                id="password_confirmation"
-                placeholder="confirm password"
-                required={true}
-                type="password"
-                style={{ marginTop: "1rem" }}
-              />
+              <FormControl
+                className={classes.formControl}
+                error={Boolean(this.errorMessages.email)}
+              >
+                <InputLabel htmlFor="email">Email</InputLabel>
+                <Input
+                  id="email"
+                  value={email || ""}
+                  placeholder="email"
+                  type="email"
+                  required={true}
+                  onChange={e => this.setState({ email: e.target.value })}
+                />
+                <FormHelperText>
+                  {this.errorMessages.email || ""}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                className={classes.formControl}
+                error={Boolean(this.errorMessages.password)}
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  id="password"
+                  value={password || ""}
+                  placeholder="password"
+                  type="password"
+                  onChange={e => this.setState({ password: e.target.value })}
+                />
+                <FormHelperText>
+                  {this.errorMessages.password || ""}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                className={classes.formControl}
+                error={Boolean(this.errorMessages.password_confirmation)}
+              >
+                <InputLabel htmlFor="password_confirmation">
+                  Confirm password
+                </InputLabel>
+                <Input
+                  id="password"
+                  value={passwordConfirmation || ""}
+                  placeholder="confirm password"
+                  type="password"
+                  onChange={e =>
+                    this.setState({ passwordConfirmation: e.target.value })
+                  }
+                />
+                <FormHelperText>
+                  {this.errorMessages.password_confirmation || ""}
+                </FormHelperText>
+              </FormControl>
             </FormGroup>
             <Button
               onClick={this.handleSignup}
               type="submit"
-              style={{ marginTop: "1rem" }}
+              className={classes.submit}
             >
               Sign up
             </Button>
@@ -122,4 +185,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup;
+export default withStyles(styles)(Signup);
