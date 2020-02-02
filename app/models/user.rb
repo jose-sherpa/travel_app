@@ -33,7 +33,7 @@ class User < ApplicationRecord
   def role_can_be_changed
     return if !role_changed? || current_user.nil? || current_user.admin?
 
-    if role == 'admin' || role_was == 'admin'
+    if !current_user.manager? || role == 'admin' || role_was == 'admin'
       errors.add(:role,
                  'you do not have permission to change this users role to that value')
     end

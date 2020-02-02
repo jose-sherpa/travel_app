@@ -52,6 +52,33 @@ RSpec.describe User, type: :model do
       end
     end
 
+    describe 'when current user has no role' do
+      describe 'changing role to manager' do
+        let(:role) { 'manager' }
+
+        it 'succeeds' do
+          expect(result).to eq(false)
+        end
+      end
+
+      describe 'changing role to admin' do
+        let(:role) { 'admin' }
+
+        it 'fails' do
+          expect(result).to eq(false)
+        end
+      end
+
+      describe 'changing role from admin' do
+        subject(:user) { create(:user, :as_admin, password: password) }
+        let(:role) { 'manager' }
+
+        it 'fails' do
+          expect(result).to eq(false)
+        end
+      end
+    end
+
     describe 'when current user is manager' do
       let(:current_user) { create(:user, :as_manager) }
 
