@@ -1,0 +1,38 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'Guardfile'
+    - 'bin/*'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'log/**/*'
+    - 'tmp/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
+Documentation:
+  Enabled: false
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+Metrics/LineLength:
+  Max: 120
+Metrics/ClassLength:
+  Max: 200
+Metrics/ModuleLength:
+  Max: 200
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/Documentation:
+  Exclude:
+  - app/mailers/**/*.rb
+  - app/helpers/**/*.rb
+  - app/controllers/**/*.rb
+Style/AndOr:
+  EnforcedStyle: conditionals
+Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+Style/TrailingCommaInLiteral:
+  Enabled: false
