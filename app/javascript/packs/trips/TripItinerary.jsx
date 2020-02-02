@@ -25,6 +25,7 @@ const styles = theme => ({
     color: "gray"
   },
   card: {
+    marginTop: theme.spacing(2),
     minWidth: 275
   },
   bullet: {
@@ -48,8 +49,9 @@ const useStyles = makeStyles(styles);
 
 const convertDate = date => moment(date).format("MMM D YYYY [at] h:mm a");
 
-function TripCard({ trip, style }) {
+function TripCard({ trip }) {
   const classes = useStyles();
+
   const { destination, start_date, end_date, comment } = trip;
   const startDate = convertDate(start_date);
   const endDate = convertDate(end_date);
@@ -58,7 +60,7 @@ function TripCard({ trip, style }) {
   const daysUntilText = getDaysUntilText(startMoment, now);
 
   return (
-    <Card className={classes.card} style={style}>
+    <Card elevation={2} className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {destination}
@@ -115,9 +117,7 @@ class TripItinerary extends React.Component {
       );
     }
 
-    return this.trips.map(trip => (
-      <TripCard style={{ marginTop: "1rem" }} key={trip.id} trip={trip} />
-    ));
+    return this.trips.map(trip => <TripCard key={trip.id} trip={trip} />);
   }
 
   render() {
