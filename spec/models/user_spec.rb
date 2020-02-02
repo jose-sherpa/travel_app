@@ -10,9 +10,9 @@ RSpec.describe User, type: :model do
     let(:new_password) { Faker::Internet.password(min_length: 8) }
     let(:result) do
       user.update(
-          password: new_password,
-          password_confirmation: new_password,
-          current_password: current_password
+        password: new_password,
+        password_confirmation: new_password,
+        current_password: current_password
       )
     end
 
