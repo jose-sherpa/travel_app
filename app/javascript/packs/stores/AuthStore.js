@@ -18,7 +18,7 @@ export class AuthStore {
       }
     })
       .then(response => {})
-      .catch(error => console.log(error));
+      .catch(error => {});
   }
 
   get currentUser() {

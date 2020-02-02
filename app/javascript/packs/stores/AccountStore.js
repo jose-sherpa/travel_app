@@ -42,7 +42,6 @@ class AccountStore extends NetworkStore {
         this.user = user;
       })
       .catch(error => {
-        console.log(error);
         this.user = null;
       })
       .finally(() => {
@@ -77,7 +76,6 @@ class AccountStore extends NetworkStore {
         }
       })
       .catch(error => {
-        console.log(error);
         callback({ error });
       });
   }

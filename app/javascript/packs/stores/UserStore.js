@@ -55,7 +55,6 @@ class UserStore extends NetworkStore {
         this.users = response.data.users;
       })
       .catch(error => {
-        console.log(error);
         this.users = [];
       })
       .finally(() => {
@@ -83,7 +82,6 @@ class UserStore extends NetworkStore {
         this.user = user;
       })
       .catch(error => {
-        console.log(error);
         this.user = null;
       })
       .finally(() => {
@@ -120,7 +118,6 @@ class UserStore extends NetworkStore {
         }
       })
       .catch(error => {
-        console.log(error);
         callback({ error });
       });
   }

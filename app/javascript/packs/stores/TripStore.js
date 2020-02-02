@@ -64,7 +64,6 @@ class TripStore extends NetworkStore {
         this.setTrips(response.data.trips);
       })
       .catch(error => {
-        console.log(error);
         this.setTrips([]);
       })
       .finally(() => {
@@ -92,7 +91,6 @@ class TripStore extends NetworkStore {
         this.setTrip(response.data.trip);
       })
       .catch(error => {
-        console.log(error);
         this.setTrip(null);
       })
       .finally(() => {
@@ -139,7 +137,6 @@ class TripStore extends NetworkStore {
         }
       })
       .catch(error => {
-        console.log(error);
         callback({ error });
       });
   }
@@ -174,7 +171,6 @@ class TripStore extends NetworkStore {
         this.setTrips(response.data.trips);
       })
       .catch(error => {
-        console.log(error);
         this.setTrips([]);
       })
       .finally(() => {
