@@ -4,7 +4,7 @@ RSpec.describe Api::Manager::UsersController, type: :request do
   include_context('token auth')
 
   describe 'PUT /api/manager/users/:id' do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :as_admin) }
     let(:session) { create(:user_session, :as_admin) }
     let(:email) { Faker::Internet.email }
     let(:password) { Faker::Internet.password(min_length: 8) }
@@ -99,6 +99,70 @@ RSpec.describe Api::Manager::UsersController, type: :request do
 
       it 'returns the correct errors' do
         expect(parsed_body.dig(:errors, :password_confirmation)).to be_present
+      end
+    end
+
+    describe 'when current user is a manager' do
+      let(:session) { create(:user_session, :as_manager) }
+
+      describe 'when user is admin' do
+        it 'returns 403' do
+          expect(response).to have_http_status(403)
+        end
+
+        describe 'when trying to remove an admin role' do
+          let(:role) { 'manager' }
+
+          it 'returns 403' do
+            expect(response).to have_http_status(403)
+          end
+        end
+      end
+
+      describe 'when user is manager' do
+        let(:user) { create(:user, :as_manager) }
+
+        it 'returns 200' do
+          expect(response).to have_http_status(200)
+        end
+
+        it 'updates the email' do
+          expect(parsed_body.dig(:user, :email)).to eq(email)
+        end
+
+        it 'returns the id' do
+          expect(parsed_body.dig(:user, :id)).to eq(user.id)
+        end
+
+        describe 'when trying to update role to admin' do
+          let(:role) { 'admin' }
+
+          it 'returns 403' do
+            expect(response).to have_http_status(422)
+          end
+
+          it 'returns the correct errors' do
+            expect(parsed_body.dig(:errors, :role)).to be_present
+          end
+        end
+      end
+    end
+
+    describe 'when current user has no role' do
+      let(:session) { create(:user_session) }
+
+      describe 'when user is admin' do
+        it 'returns 403' do
+          expect(response).to have_http_status(403)
+        end
+      end
+
+      describe 'when user has no role' do
+        let(:user) { create(:user) }
+
+        it 'returns 200' do
+          expect(response).to have_http_status(403)
+        end
       end
     end
   end
