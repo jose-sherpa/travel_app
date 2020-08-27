@@ -1,14 +1,22 @@
 # README
 
-*Directions*
+## Directions
 
 You'll need docker installed with the `docker-compose` command
 as well as ruby and the bundler gem and node with yarn.
 
-*First run*
+## First run
 
-You will need to create a db called travel_app_development
-after you start docker before first running the app.
+You will need to create a db called travel_app_development that the postgres user 
+has access to without password after you start docker before first running the app.
+
+`docker-compose up db`
+
+and then:
+
+`docker-compose run db /bin/bash -c "createdb travel_app_development -U postgres -h host.docker.internal -p 5440"`
+
+## Running the app
  
 In one tab run:
 
@@ -16,7 +24,7 @@ In one tab run:
 
 In another tab run:
 
-`yarn install && ./bin/webpack-dev-serving`
+`yarn install && ./bin/webpack-dev-server`
 
 In a final tab run: 
 
